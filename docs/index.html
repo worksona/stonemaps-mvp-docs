@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA/UXD Documentation Set · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html" aria-current="page">Library</a>
+<a href="00-concept-glossary.html">00 · Glossary</a>
+<a href="01-screen-inventory.html">01 · Inventory</a>
+<a href="02-site-map-ia.html">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html">03 · Flows</a>
+<a href="04-data-state-requirements.html">04 · Data & State</a>
+<a href="05-notifications-reengagement.html">05 · Notifications</a>
+<a href="06-pwa-constraints.html">06 · PWA</a>
+<a href="07-backend-brief.html">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — IA/UXD Documentation Set</h1>
+<p>Field-test MVP documentation, grounded in the 10 HTML prototype screens and PE-FT-workflow-V5.jpg in the parent folder. Drafted 2026-07-02.</p>
+<p><strong>Purpose:</strong> enable UI design and development of the field-test MVP, plus the account layer (create accounts so holders can return after gifting a stone — offered post-gift, never required to start).</p>
+<h2>The set</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Doc</th>
+<th>What it is</th>
+<th>Primary audience</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="00-concept-glossary.html">00 · Concept Glossary</a></td>
+<td>Canonical vocabulary — Stone, Emissary, Holder, Pairing, Gift, Claim, the privacy rungs. Change terms here first.</td>
+<td>everyone</td>
+</tr>
+<tr>
+<td><a href="01-screen-inventory.html">01 · Screen &amp; Component Inventory</a></td>
+<td>What the prototype actually contains: screens, nav states, components, both design-token sets, flagged inconsistencies (F1–F8).</td>
+<td>UI design, dev</td>
+</tr>
+<tr>
+<td><a href="02-site-map-ia.html">02 · Site Map &amp; IA</a></td>
+<td>Two contexts (Stone / Collection), full site map incl. missing (M1–M4) and new account screens (A1–A9), gating matrix, URL routes, IA decisions D1–D7.</td>
+<td>UI design, dev</td>
+</tr>
+<tr>
+<td><a href="03-core-user-flows.html">03 · Core User Flows</a></td>
+<td>Flows A–G: first touch, return, commons, gift+claim, magic-link verify, afterlife, notifications. Build-order suggestion.</td>
+<td>UI design, dev</td>
+</tr>
+<tr>
+<td><a href="04-data-state-requirements.html">04 · Data &amp; State Requirements</a></td>
+<td>The privacy ladder (rungs 1–5), entity model around Pairing, client-side state, state machines, what claiming transfers, retention.</td>
+<td>dev, product</td>
+</tr>
+<tr>
+<td><a href="05-notifications-reengagement.html">05 · Notifications &amp; Re-engagement</a></td>
+<td>Trigger matrix T1–T6, anti-triggers, email-first channel strategy, opt-in surface, success metrics.</td>
+<td>dev, product</td>
+</tr>
+<tr>
+<td><a href="06-pwa-constraints.html">06 · PWA Constraints</a></td>
+<td>Platform realities: magic-link×PWA session split, iOS storage eviction, offline scope, QR binding, media capture. Decisions P1–P7.</td>
+<td>dev</td>
+</tr>
+<tr>
+<td><a href="07-backend-brief.html">07 · Backend Brief</a></td>
+<td>Requirements checklist any backend must meet; build-vs-reuse evaluation of the existing stone-maps backend (currently an option, not a given).</td>
+<td>dev, product</td>
+</tr>
+<tr>
+<td><a href="08-holder-journey-map.html">08 · Holder Journey Map</a></td>
+<td>Visual six-stage journey diagram (Encounter → Threshold → Converse → Participate → Gift → Follow) with doing/thinking/touchpoints, emotion curve, and the Stone-Context → Claim → Collection-Context band.</td>
+<td>everyone</td>
+</tr>
+</tbody>
+</table></div>
+<h2>How to use it</h2>
+<ul>
+<li><strong>Designing a screen?</strong> 01 (components/tokens) + 02 (where it sits) + 03 (the flow it serves).</li>
+<li><strong>Building a feature?</strong> 03 (behavior) + 04 (data rules) + 06 (platform constraints).</li>
+<li><strong>Backend decision?</strong> 07, scored against 04.</li>
+<li>Cross-references use stable ids: F# (inventory flags), M# (missing screens), A# (account screens), D# (IA decisions), T# (triggers), P# (platform decisions), R# (privacy rules).</li>
+</ul>
+<h2>Open product calls (blocking items marked ●)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Question</th>
+<th>Blocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>● F8</td>
+<td>My Journal in MVP or eval-only?</td>
+<td>final flows, claim-offer copy, backend scope</td>
+</tr>
+<tr>
+<td>● 07</td>
+<td>Backend: extend existing vs fresh build (pending schema inspection — DB was down)</td>
+<td>all dev sequencing</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>Stone name vs Emissary name (Koozhankal/Pierrot); holder-renameable?</td>
+<td>conversation header, landing</td>
+</tr>
+<tr>
+<td>F3</td>
+<td>Two design languages: formalize or unify token sets</td>
+<td>UI kit</td>
+</tr>
+<tr>
+<td>D6</td>
+<td>Past holders read-only in afterlife (recommended) — confirm</td>
+<td>afterlife screens</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Virtual-stone handoff mechanics (no QR)</td>
+<td>flow D variant</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Bystander view when scanning a held stone</td>
+<td>small screen + gating</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Rung 4–5 deletion policy (takedown-request default recommended)</td>
+<td>fineprint (M3)</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Phase status</h2>
+<ul>
+<li><strong>Phase 0</strong> (glossary, inventory) — ✅ drafted</li>
+<li><strong>Phase 1</strong> (IA, flows) — ✅ drafted</li>
+<li><strong>Phase 2–3</strong> (data/state, notifications, PWA, backend brief) — ✅ drafted</li>
+<li><strong>Next:</strong> resolve ● items → wireframe the 12 missing/new screens (M1–M4, A1–A9) → UI kit from unified tokens → backend decision → build per the slice order in Doc 3.</li>
+</ul>
+</main>
+
+<div class="pager">
+<span class="spacer"></span><a href="00-concept-glossary.html">00 · Glossary &rarr;</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWA Constraints & Technical Notes · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html">Library</a>
+<a href="00-concept-glossary.html">00 · Glossary</a>
+<a href="01-screen-inventory.html">01 · Inventory</a>
+<a href="02-site-map-ia.html">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html">03 · Flows</a>
+<a href="04-data-state-requirements.html">04 · Data & State</a>
+<a href="05-notifications-reengagement.html">05 · Notifications</a>
+<a href="06-pwa-constraints.html" aria-current="page">06 · PWA</a>
+<a href="07-backend-brief.html">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — PWA Constraints &amp; Technical Notes</h1>
+<p><strong>Doc 6 of the IA/UXD documentation set</strong>
+Status: Draft v1 · 2026-07-02
+Purpose: the platform realities that constrain the IA and flows. Short by design — each item is a constraint dev must design around, with the decision it forces.</p>
+<hr />
+<h2>1. Magic links × PWA — the one that breaks products</h2>
+<p><strong>Problem:</strong> magic-link emails open in the default browser tab, <strong>not</strong> in an installed PWA. On iOS especially, the installed PWA and Safari <strong>do not share storage</strong> — a session established in the Safari tab does not exist in the home-screen app.</p>
+<p><strong>Reality check for Stonemaps:</strong> most field-test users will <em>not</em> have installed the PWA — they scanned a QR and used it in the browser. For them, magic links just work. The failure case is the engaged user who installed the app <em>and</em> clicks a claim/notification link.</p>
+<p><strong>Required behavior (decision, not option):</strong>
+1. <code>/auth/verify</code> establishes the session <strong>in whatever context it opens</strong> — browser tab included. The afterlife experience must be fully functional in-browser; installation is an enhancement, never a requirement.
+2. After verify in a browser tab, if a related installed app might exist, show a low-key line — <em>"If you've added Stonemaps to your home screen, it's signed in there too the next time it asks"</em> — implemented via one of:
+   - a short-lived, single-use <strong>handoff code</strong> shown post-verify that the installed app can accept ("enter the 4 words from your email tab"), or
+   - simply re-requesting a link from inside the installed app (cheapest; recommended for MVP).
+3. Never rely on the link opening in the PWA. No custom-scheme tricks in MVP.</p>
+<p><strong>MVP decision:</strong> magic links are a browser-first flow; the installed PWA offers "sign in" which sends a fresh link — the user who installed the app taps their email on the same device and iOS opens… Safari, where they're signed in, and the app offers the re-request path. Accept the mild clunk; document it; revisit with passkeys post-field-test (magic-link-verified accounts upgrade cleanly to passkeys later — natural roadmap item).</p>
+<h2>2. Sessions &amp; storage eviction</h2>
+<ul>
+<li>Long-lived cookie sessions (≥90 days, sliding). Passwordless users must not face re-auth walls — a logged-out past holder is a lost past holder.</li>
+<li>iOS can evict IndexedDB/localStorage of <em>browser-tab</em> (non-installed) usage after ~7 days of Safari inactivity (ITP). Consequences:</li>
+<li><strong>Conversation transcripts (rung 1) may not survive a long gap for browser-tab holders.</strong> Accepted risk (Doc 4 §3) — Emissary handles gracefully.</li>
+<li><strong>Session cookies survive</strong> if HttpOnly server cookies (not JS-set) — use server-set cookies for auth. This mostly neutralizes eviction for auth.</li>
+<li>The device <code>person_ref</code> (anonymous holder binding) can also be evicted → holder looks like a bystander. Mitigation: <code>person_ref</code> also lives server-side keyed to the active pairing; recovery flow = "are you still holding <Stone>?" re-bind prompt on the Landing page during an active pairing. <strong>[design this small screen]</strong></li>
+</ul>
+<h2>3. Offline &amp; installation</h2>
+<ul>
+<li><strong>Offline scope for MVP:</strong> app shell + last-viewed content caches. Composing (gift/post/entry) should hold drafts locally and retry. Conversation requires the network (LLM) — offline Emissary states needed: <em>"I'm out of range of myself right now."</em> <strong>[copy + state to design]</strong></li>
+<li><strong>Install prompt:</strong> never interrupt Stone Context with install prompts. The only sanctioned moment: after claim, on My Stones — <em>"add this to your home screen to keep the thread"</em>. iOS has no programmatic prompt; show the share-sheet instruction pattern there.</li>
+<li>Self-host fonts (currently Google CDN) and replace Unsplash hot-links (F7) — offline shell and privacy both require it.</li>
+</ul>
+<h2>4. QR / URL binding</h2>
+<ul>
+<li><code>/s/:stoneId</code> is printed on physical objects — immutable for the stone's life, opaque ids, HTTPS, no redirects through third-party shorteners.</li>
+<li>QR should encode the canonical URL directly (no interstitial), because scan-to-first-paint time <em>is</em> the first impression of a "talking stone."</li>
+<li>Landing must render meaningfully even while JS loads (SSR/static first paint) — the scan moment happens outdoors, on cell connections.</li>
+</ul>
+<h2>5. Media capture &amp; upload</h2>
+<p>"Add files…" (gift, commons, journal) on mobile web: <code>&lt;input type=file accept="image/*,audio/*,video/*" capture&gt;</code> covers photo/audio/video including direct camera. Constraints: client-side image downscale before upload (cell connections), size caps per rung-4/5 content (moderation surface), background-retry for uploads mid-gift — a failed upload must never eat a parting gift. <strong>Draft-preservation rule: the gift text is committed before media upload begins.</strong></p>
+<h2>6. Concrete MVP decisions this doc fixes</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>Afterlife/auth fully functional in plain browser; PWA install is enhancement only</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Magic-link handoff to installed app = re-request from inside app (no scheme hacks)</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>Auth via server-set HttpOnly cookies, ≥90-day sliding</td>
+</tr>
+<tr>
+<td>P4</td>
+<td><code>person_ref</code> mirrored server-side on the pairing; re-bind prompt screen exists</td>
+</tr>
+<tr>
+<td>P5</td>
+<td>QR encodes canonical <code>/s/:stoneId</code>; landing SSR/static-first</td>
+</tr>
+<tr>
+<td>P6</td>
+<td>Push notifications deferred entirely (Doc 5 §3)</td>
+</tr>
+<tr>
+<td>P7</td>
+<td>Gift text commits before media upload; drafts local-first</td>
+</tr>
+</tbody>
+</table></div>
+</main>
+
+<div class="pager">
+<a href="05-notifications-reengagement.html">&larr; 05 · Notifications</a><span class="spacer"></span><a href="07-backend-brief.html">07 · Backend &rarr;</a>
+</div>
+
+</body>
+</html>

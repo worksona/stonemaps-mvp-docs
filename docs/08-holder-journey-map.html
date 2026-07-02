@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stonemaps — Holder Journey Map</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA; --red-wash-deep:#F4DCDE;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --ok:#2E7D46; --ok-wash:#E4F0E8;
+    --warn:#9A6A0B; --warn-wash:#F7EED8;
+    --open:#A31621; --open-wash:#FDF2F3;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);padding:22px 22px 40px;}
+
+  /* ── Banner ── */
+  .banner{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;border-radius:0;padding:22px 34px 20px;position:relative;overflow:hidden;
+  }
+  .banner h1{
+    font-family:var(--cond);font-weight:700;font-size:clamp(22px,2.6vw,34px);
+    letter-spacing:.045em;text-transform:uppercase;text-align:center;text-wrap:balance;line-height:1.1;
+  }
+  .banner .sub{
+    text-align:center;margin-top:6px;font-size:13px;letter-spacing:.14em;
+    text-transform:uppercase;font-weight:500;opacity:.85;
+  }
+  .banner .sub b{font-weight:700;opacity:1}
+  .banner .rulewrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:5px;}
+  .banner .rulewrap::before,.banner .rulewrap::after{
+    content:"";height:1px;width:120px;background:rgba(255,255,255,.45);
+  }
+  .banner svg.path{position:absolute;inset:auto 0 0 0;width:100%;height:22px;opacity:.35}
+
+  /* ── In-card flow context ── */
+  .sec.flowctx .fl{
+    font-size:10.5px;line-height:1.5;color:var(--muted);margin-bottom:5px;
+  }
+  .sec.flowctx .fl:last-child{margin-bottom:0;}
+  .sec.flowctx b.id{
+    font-family:var(--cond);font-weight:700;color:#fff;background:var(--red);
+    border-radius:0;padding:0 5px;margin-right:5px;font-size:10px;letter-spacing:.05em;
+  }
+  .sec.flowctx b.nm{color:var(--ink);font-weight:600;}
+
+  /* ── Stages grid — full-bleed, fluid, no side-scroll ── */
+  .stages{
+    display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:34px 24px;margin-top:28px;align-items:stretch;
+  }
+  .stage{
+    background:var(--card);border:1px solid var(--rule);border-radius:0;
+    padding:30px 14px 0;position:relative;display:flex;flex-direction:column;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);min-width:0;
+  }
+  .stage::after{
+    content:"❯";position:absolute;top:104px;right:-23px;width:22px;height:22px;
+    background:var(--red);color:#fff;border-radius:50%;
+    font-size:11px;font-weight:700;line-height:22px;text-align:center;z-index:3;
+  }
+  .stage:last-child::after{content:none;}
+
+  .badge{
+    position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+    width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;
+    font-family:var(--cond);font-weight:700;font-size:15px;
+    display:flex;align-items:center;justify-content:center;
+    border:3px solid var(--ground);
+  }
+  .icon{display:flex;justify-content:center;margin-bottom:8px;}
+  .icon svg{width:38px;height:38px;stroke:var(--red);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+
+  .stage h2{
+    font-family:var(--cond);font-weight:700;font-size:18px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);text-align:center;margin-bottom:5px;text-wrap:balance;
+  }
+  .stage .summary{
+    text-align:center;font-size:11.5px;line-height:1.4;color:var(--muted);
+    margin:0 2px 11px;text-wrap:balance;
+  }
+
+  .sec{border-top:1px solid var(--rule);padding:8px 1px 9px;}
+  .sec .lbl{
+    font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--red);font-weight:700;margin-bottom:5px;
+  }
+  .sec ul{list-style:none;}
+  .sec li{
+    font-size:11.5px;line-height:1.45;padding-left:12px;position:relative;margin-bottom:4px;color:var(--ink);
+  }
+  .sec li:last-child{margin-bottom:0;}
+  .sec li::before{
+    content:"";position:absolute;left:0;top:.5em;width:4px;height:4px;background:var(--red);
+  }
+  .sec li b{font-weight:600;}
+  .sec.think p{
+    font-family:var(--serif);font-style:italic;font-size:12.5px;line-height:1.45;color:#4c3f3d;
+  }
+  .sec.doing{flex:0 0 auto;}
+
+  /* touchpoints as described list */
+  .sec.touch li{padding-left:0;margin-bottom:5px;}
+  .sec.touch li::before{content:none;}
+  .sec.touch .tp{
+    display:inline-block;font-size:10px;font-weight:700;letter-spacing:.03em;
+    background:var(--red-wash);color:var(--red-dark);border-radius:0;padding:2px 8px;margin-right:4px;
+  }
+  .sec.touch .rt{font-family:var(--mono);font-size:9.5px;color:var(--muted);}
+  .sec.touch .d{display:block;font-size:10.5px;color:var(--muted);line-height:1.4;margin-top:1px;}
+
+  /* leaves-behind chips: traces / paths / artifacts / connections */
+  .sec.leaves .chips{gap:4px;}
+  .lchip{
+    font-size:9.5px;font-weight:600;border-radius:0;padding:2.5px 8px;
+    white-space:nowrap;letter-spacing:.02em;
+  }
+  .lchip .g{font-weight:700;margin-right:3px;opacity:.75;}
+  .lchip.trace{background:#ECEAE7;color:#5B534F;}
+  .lchip.path{background:#E3EEEC;color:#23655C;}
+  .lchip.art{background:#F6ECD8;color:#8A6414;}
+  .lchip.conn{background:#EDE6F0;color:#5E3B70;}
+
+  /* learning + tech */
+  .sec.learn li b{color:var(--red-dark);}
+  .sec.tech li{font-family:var(--mono);font-size:10px;line-height:1.5;color:#54463F;}
+  .sec.tech li::before{background:var(--muted);}
+
+  /* callouts */
+  .callout{border-radius:0;padding:9px 10px 10px;margin:0 0 8px;}
+  .callout .clbl{
+    font-size:9px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:5px;
+  }
+  .callout ul{list-style:none;}
+  .callout li{font-size:10.5px;line-height:1.45;padding-left:12px;position:relative;margin-bottom:3px;}
+  .callout li:last-child{margin-bottom:0;}
+  .risk{background:var(--cream);border:1px solid var(--cream-edge);margin-top:9px;}
+  .risk .clbl{color:var(--cream-ink);}
+  .risk .clbl::before{content:"⚠ ";}
+  .risk li{color:#5d4f2a;}
+  .risk li::before{content:"•";position:absolute;left:2px;color:var(--cream-ink);}
+  .answer{background:var(--red-wash);border:1px solid var(--red-wash-deep);}
+  .answer .clbl{color:var(--red-dark);}
+  .answer li{color:#6e2a30;}
+  .answer li::before{content:"►";position:absolute;left:0;font-size:7px;top:.45em;color:var(--red);}
+  .answer li b{font-weight:700;color:var(--red-dark);}
+
+  /* footer: status + deps + who */
+  .stat{border-top:1px solid var(--rule);padding:8px 1px 6px;display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:auto;}
+  .schip{
+    font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    border-radius:0;padding:2px 7px;white-space:nowrap;
+  }
+  .schip.ok{background:var(--ok-wash);color:var(--ok);}
+  .schip.warn{background:var(--warn-wash);color:var(--warn);}
+  .schip.open{background:var(--open-wash);color:var(--open);border:1px solid var(--red-wash-deep);}
+  .deps{font-family:var(--mono);font-size:9.5px;color:var(--muted);margin-left:auto;}
+  .who{
+    border-top:1px solid var(--rule);padding:7px 1px 10px;
+    display:flex;justify-content:space-between;align-items:baseline;gap:6px;
+  }
+  .who .k{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+  .who .v{font-size:10.5px;font-weight:600;color:var(--ink);text-align:right;}
+  .stage.claim{border-color:var(--red);border-width:2px;}
+  .stage.claim .who .v{color:var(--red);}
+
+  /* ── Emotion curve — fluid ── */
+  .emotions{margin-top:16px;}
+  .emotions .lbl-row{
+    font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);
+    font-weight:700;margin:12px 0 4px;
+  }
+  .e-wrap{position:relative;}
+  .e-wrap svg.curve{
+    position:absolute;inset:0;width:100%;height:110px;display:block;
+  }
+  .e-grid{
+    position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));z-index:2;
+  }
+  .e-cell{position:relative;height:110px;}
+  .e-dot{
+    position:absolute;left:50%;transform:translate(-50%,-50%);
+    width:13px;height:13px;border-radius:50%;background:var(--red);border:2.5px solid var(--red);
+  }
+  .e-dot.hollow{background:#fff;}
+  .e-text{text-align:center;padding:4px 6px 0;}
+  .e-text .nm{
+    font-family:var(--cond);font-weight:700;font-size:12.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--red);
+  }
+  .e-text .why{font-size:10.5px;color:var(--muted);line-height:1.35;}
+
+  /* ── Context band ── */
+  .band{display:flex;margin-top:24px;height:72px;}
+  .band .seg{
+    flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    color:#fff;background:var(--red-dark);position:relative;padding:0 34px 0 44px;
+  }
+  .band .seg:first-child{border-radius:0;padding-left:30px;}
+  .band .seg:last-child{border-radius:0;background:var(--red);}
+  .band .seg.mid{
+    flex:0 0 30%;background:#fff;color:var(--red-dark);
+    border-top:2px solid var(--red-dark);border-bottom:2px solid var(--red-dark);
+  }
+  .band .seg::after{
+    content:"";position:absolute;right:-18px;top:0;z-index:2;
+    border-top:36px solid transparent;border-bottom:36px solid transparent;border-left:18px solid var(--red-dark);
+  }
+  .band .seg.mid::after{border-left-color:#fff;right:-16px;border-top-width:34px;border-bottom-width:34px;top:2px;}
+  .band .seg:last-child::after{content:none;}
+  .band .seg.mid::before{
+    content:"";position:absolute;right:-18px;top:-2px;z-index:1;
+    border-top:38px solid transparent;border-bottom:38px solid transparent;border-left:18px solid var(--red-dark);
+  }
+  .band .seg:first-child::before{content:none;}
+  .band h3{font-family:var(--cond);font-weight:700;font-size:15px;letter-spacing:.09em;text-transform:uppercase;}
+  .band p{font-size:11px;opacity:.88;margin-top:2px;letter-spacing:.02em;}
+
+  .legend{
+    margin-top:16px;display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;align-items:center;
+    font-size:10px;color:var(--muted);letter-spacing:.04em;
+  }
+  .legend .schip{font-size:9px;}
+  .foot{
+    margin-top:10px;text-align:center;font-size:10px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);
+  }
+
+  /* ── Responsive reflow (no sideways scroll, ever) ── */
+  @media (max-width:1500px){
+    .stages{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .stage::after{content:none;}
+    .e-wrap svg.curve{display:none;}
+    .e-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+    .e-cell{height:auto;padding-top:6px;}
+    .e-dot{position:static;transform:none;margin:0 auto 4px;display:block;}
+  }
+  @media (max-width:920px){
+    .stages,.e-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .band{flex-direction:column;height:auto;}
+    .band .seg,.band .seg.mid{flex:1;padding:12px 20px;border-radius:0;}
+    .band .seg:first-child{border-radius:0;}
+    .band .seg:last-child{border-radius:0;}
+    .band .seg::after,.band .seg::before{content:none;}
+    .band .seg.mid{border:2px solid var(--red-dark);}
+  }
+  @media (max-width:600px){
+    .stages,.e-grid{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* ── Page nav ── */
+  .pagenav{
+    display:flex;flex-wrap:wrap;gap:18px;align-items:center;
+    padding:10px 4px 16px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+  }
+  .pagenav a{color:var(--red-dark);text-decoration:none;}
+  .pagenav a:hover{text-decoration:underline;}
+  .pagenav .brand{margin-right:auto;color:var(--ink);letter-spacing:.1em;}
+</style>
+</head>
+<body>
+
+<nav class="pagenav">
+  <span class="brand">Stonemaps · Field-Test Docs</span>
+  <a href="../index.html">Home</a>
+  <a href="index.html">Library</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<header class="banner">
+  <h1>Stonemaps · Holder Journey</h1>
+  <div class="rulewrap"></div>
+  <div class="sub">From first scan to lifelong follower — <b>Field-Test MVP</b></div>
+  <svg class="path" viewBox="0 0 1200 26" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,20 C150,6 280,24 420,14 S700,4 860,16 S1100,22 1200,10"
+          fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="2 7" stroke-linecap="round"/>
+  </svg>
+</header>
+
+<div class="stages">
+
+  <!-- ─── 1 ENCOUNTER ─── -->
+  <section class="stage">
+    <div class="badge">1</div>
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 44 44">
+        <ellipse cx="22" cy="24" rx="12" ry="9.5"/>
+        <path d="M6 10h6M6 10v6M38 10h-6M38 10v6M6 38v-6M6 38h6M38 38h-6M38 38v-6"/>
+      </svg>
+    </div>
+    <h2>Encounter</h2>
+    <p class="summary">A stranger scans the QR on a stone and meets something that claims to talk.</p>
+    <div class="sec doing">
+      <div class="lbl">Doing</div>
+      <ul>
+        <li>Scans the <b>QR</b>; meets <b>name, place, traits</b></li>
+        <li>Reads &ldquo;this is a field test&rdquo;</li>
+        <li>Taps <b>Talk to the stone</b></li>
+      </ul>
+    </div>
+    <div class="sec think">
+      <div class="lbl">Thinking</div>
+      <p>&ldquo;A talking stone? A map, a voice&nbsp;&mdash; something else?&rdquo;</p>
+    </div>
+    <div class="sec touch">
+      <div class="lbl">Touchpoints</div>
+      <ul>
+        <li><span class="tp">Stone + QR</span><span class="rt">physical object</span>
+          <span class="d">The artifact itself — QR printed on the stone resolves to its permanent URL</span></li>
+        <li><span class="tp">Landing</span><span class="rt">/s/:stoneId</span>
+          <span class="d">Identity, traits, field-test frame, one CTA; static-first so it paints on cell networks</span></li>
+      </ul>
+    </div>
+    <div class="sec leaves">
+      <div class="lbl">Leaves behind</div>
+      <div class="chips">
+        <span class="lchip trace"><span class="g">◦</span>device person_ref</span>
+        <span class="lchip path"><span class="g">→</span>QR → /s/:id</span>
+        <span class="lchip conn"><span class="g">⇄</span>pairing opens · person↔stone</span>
+      </div>
+    </div>
+    <div class="sec learn">
+      <div class="lbl">Field-test learning</div>
+      <ul>
+        <li><b>Scan → talk rate</b> — does the landing convert curiosity?</li>
+        <li>Do people read below the fold before tapping?</li>
+      </ul>
+    </div>
+    <div class="sec tech">
+      <div class="lbl">Tech reqs</div>
+      <ul>
+        <li>static/SSR landing, &lt;1s first paint</li>
+        <li>opaque permanent stone ids</li>
+        <li>current-holder check on deeper routes</li>
+      </ul>
+    </div>
+    <div class="callout risk">
+      <div class="clbl">Where it breaks</div>
+      <ul>
+        <li>Slow scan-to-paint kills the magic</li>
+        <li>URLs leak via photos — strangers land mid-tenure</li>
+      </ul>
+    </div>
+    <div class="callout answer">
+      <div class="clbl">The design answer</div>
+      <ul>
+        <li><b>P5</b> — QR encodes canonical URL, static-first</li>
+        <li>Bystander view: <i>&ldquo;with someone right now&rdquo;</i></li>
+      </ul>
+    </div>
+    <div class="sec flowctx">
+      <div class="lbl">Flow context</div>
+      <div class="fl"><b class="id">A</b><b class="nm">First touch</b> — begins here: QR scan → Landing. Anonymous, under a minute end to end; the nav stays locked until the first exchange.</div>
+    </div>
+    <div class="stat">
+      <span class="schip ok">UI built</span>
+      <span class="schip open">bystander view · open</span>
+      <span class="deps">needs — · dec P5</span>
+    </div>
+    <div class="who"><span class="k">Flow A</span><span class="v">Stranger · anonymous</span></div>
+  </section>
+
+  <!-- ─── 2 THRESHOLD ─── -->
+  <section class="stage">
+    <div class="badge">2</div>
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 44 44">
+        <path d="M10 38V20a12 12 0 0 1 24 0v18"/>
+        <path d="M6 38h32"/>
+        <path d="M17 38V26a5 5 0 0 1 10 0v12"/>
+      </svg>
+    </div>
+    <h2>Threshold</h2>
+    <p class="summary">The gate, crossed once: a gift left by the previous holder, and plain-language consent.</p>
+    <div class="sec doing">
+      <div class="lbl">Doing</div>
+      <ul>
+        <li>Receives the <b>previous holder&rsquo;s gift</b></li>
+        <li>Learns the stone keeps a <b>quiet journal</b> (opt-out)</li>
+        <li><b>Consent choice</b>: share conversations with team — default off</li>
+      </ul>
+    </div>
+    <div class="sec think">
+      <div class="lbl">Thinking</div>
+      <p>&ldquo;Someone left this behind &mdash; for whoever came next. That&rsquo;s me.&rdquo;</p>
+    </div>
+    <div class="sec touch">
+      <div class="lbl">Touchpoints</div>
+      <ul>
+        <li><span class="tp">Welcome</span><span class="rt">/s/:id/welcome</span>
+          <span class="d">Latest gift, framed as an inheritance; link to the full chain</span></li>
+        <li><span class="tp">PE Intro</span><span class="rt">/s/:id/intro</span>
+          <span class="d">&ldquo;What am I?&rdquo; framing + the two disclosure rows + Terms/FAQ</span></li>
+        <li><span class="tp">The Gifts</span><span class="rt">/s/:id/gifts</span>
+          <span class="d">Chain of every parting gift, oldest to newest — the stone&rsquo;s memory made visible</span></li>
+      </ul>
+    </div>
+    <div class="sec leaves">
+      <div class="lbl">Leaves behind</div>
+      <div class="chips">
+        <span class="lchip trace"><span class="g">◦</span>consent flags on pairing</span>
+        <span class="lchip trace"><span class="g">◦</span>gate-crossed flag</span>
+        <span class="lchip path"><span class="g">→</span>gate → nav unlocked</span>
+        <span class="lchip conn"><span class="g">⇄</span>inheritance · holder n−1 → n</span>
+      </div>
+    </div>
+    <div class="sec learn">
+      <div class="lbl">Field-test learning</div>
+      <ul>
+        <li><b>Gate drop-off</b> — where do people abandon the two-step gate?</li>
+        <li><b>Team-share opt-in rate</b> at default-off</li>
+      </ul>
+    </div>
+    <div class="sec tech">
+      <div class="lbl">Tech reqs</div>
+      <ul>
+        <li>consent flags stored on the pairing</li>
+        <li>gifts-chain read model (ordered by pairing)</li>
+        <li>first-time-gate flag per pairing/device</li>
+      </ul>
+    </div>
+    <div class="callout risk">
+      <div class="clbl">Where it breaks</div>
+      <ul>
+        <li>Consent stack reads as legalese — tone collapses</li>
+        <li>First circulation: no gift to show</li>
+      </ul>
+    </div>
+    <div class="callout answer">
+      <div class="clbl">The design answer</div>
+      <ul>
+        <li>Disclosures split <b>informational vs consent</b></li>
+        <li>First-circulation opening copy — logged gap</li>
+      </ul>
+    </div>
+    <div class="sec flowctx">
+      <div class="lbl">Flow context</div>
+      <div class="fl"><b class="id">A</b><b class="nm">First touch</b> — continues: Welcome → PE Intro form the once-per-pairing gate. Returning holders skip this entirely.</div>
+    </div>
+    <div class="stat">
+      <span class="schip ok">UI built</span>
+      <span class="schip warn">gifts chain · to design</span>
+      <span class="deps">needs M1 · M3</span>
+    </div>
+    <div class="who"><span class="k">Flow A</span><span class="v">New holder · anonymous</span></div>
+  </section>
+
+  <!-- ─── 3 CONVERSE ─── -->
+  <section class="stage">
+    <div class="badge">3</div>
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 44 44">
+        <path d="M8 12a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v12a4 4 0 0 1-4 4H20l-8 7v-7h0a4 4 0 0 1-4-4z"/>
+        <path d="M15 15.5h14M15 21h9"/>
+      </svg>
+    </div>
+    <h2>Converse</h2>
+    <p class="summary">Private exchange with the Emissary — it opens from what the last holder left behind.</p>
+    <div class="sec doing">
+      <div class="lbl">Doing</div>
+      <ul>
+        <li>Talks with the <b>Emissary</b>; it opens from the last gift</li>
+        <li>Returns days later — <b>straight to chat</b>, history intact</li>
+        <li>Peeks at the <b>PE Journal</b>; may opt out</li>
+      </ul>
+    </div>
+    <div class="sec think">
+      <div class="lbl">Thinking</div>
+      <p>&ldquo;It doesn&rsquo;t push. It sits with what&rsquo;s carried.&rdquo;</p>
+    </div>
+    <div class="sec touch">
+      <div class="lbl">Touchpoints</div>
+      <ul>
+        <li><span class="tp">PE Conversation</span><span class="rt">/s/:id/emissary</span>
+          <span class="d">Chat with persona header (name, trait, rename); text, mic, attach</span></li>
+        <li><span class="tp">PE Journal</span><span class="rt">/s/:id/emissary/journal</span>
+          <span class="d">The stone&rsquo;s dated notes on this tenure; per-stone opt-out checkbox</span></li>
+        <li><span class="tp">Device store</span><span class="rt">IndexedDB</span>
+          <span class="d">Transcript lives here only — the privacy promise, made physical</span></li>
+      </ul>
+    </div>
+    <div class="sec leaves">
+      <div class="lbl">Leaves behind</div>
+      <div class="chips">
+        <span class="lchip trace"><span class="g">◦</span>transcript · device only</span>
+        <span class="lchip art"><span class="g">✦</span>PE journal entries</span>
+        <span class="lchip path"><span class="g">→</span>return path → chat</span>
+        <span class="lchip conn"><span class="g">⇄</span>thread · holder↔emissary</span>
+      </div>
+    </div>
+    <div class="sec learn">
+      <div class="lbl">Field-test learning</div>
+      <ul>
+        <li><b>Return rate mid-tenure</b> &amp; conversation depth</li>
+        <li><b>PE-journal opt-out rate</b> — is the journal welcome?</li>
+      </ul>
+    </div>
+    <div class="sec tech">
+      <div class="lbl">Tech reqs</div>
+      <ul>
+        <li>LLM endpoint w/ per-stone persona prompt</li>
+        <li>opening generated from previous gift</li>
+        <li>server-side PE-journal generation (skippable)</li>
+        <li>no server persistence of transcript (R1)</li>
+      </ul>
+    </div>
+    <div class="callout risk">
+      <div class="clbl">Where it breaks</div>
+      <ul>
+        <li>One silent upload ends the privacy promise — and the product</li>
+        <li>iOS eviction can erase a browser-tab transcript</li>
+      </ul>
+    </div>
+    <div class="callout answer">
+      <div class="clbl">The design answer</div>
+      <ul>
+        <li><b>R1</b> — transcript never leaves the device unconsented</li>
+        <li><b>P4</b> — re-bind prompt; Emissary degrades gracefully</li>
+      </ul>
+    </div>
+    <div class="sec flowctx">
+      <div class="lbl">Flow context</div>
+      <div class="fl"><b class="id">A</b><b class="nm">First touch</b> — ends here, at the first exchange with the Emissary; the nav unlocks.</div>
+      <div class="fl"><b class="id">B</b><b class="nm">Return, holding</b> — reopen mid-tenure: straight to the chat, history intact, no gate.</div>
+    </div>
+    <div class="stat">
+      <span class="schip ok">UI built</span>
+      <span class="schip warn">rename/edit · to design</span>
+      <span class="deps">needs M4 · dec F1</span>
+    </div>
+    <div class="who"><span class="k">Flows A · B</span><span class="v">Holder · anonymous</span></div>
+  </section>
+
+  <!-- ─── 4 PARTICIPATE ─── -->
+  <section class="stage">
+    <div class="badge">4</div>
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 44 44">
+        <circle cx="15" cy="17" r="7"/>
+        <circle cx="29" cy="17" r="7"/>
+        <circle cx="22" cy="29" r="7"/>
+      </svg>
+    </div>
+    <h2>Participate</h2>
+    <p class="summary">The shared spaces: what other holders left, and what this one adds to the chain.</p>
+    <div class="sec doing">
+      <div class="lbl">Doing</div>
+      <ul>
+        <li>Browses the <b>Commons</b> — Stone ⇄ Public feeds</li>
+        <li>Contributes; spends a <b>one-time reply slot</b></li>
+        <li>Writes <b>My Journal</b> entries with share scopes</li>
+      </ul>
+    </div>
+    <div class="sec think">
+      <div class="lbl">Thinking</div>
+      <p>&ldquo;Others have passed through here before me.&rdquo;</p>
+    </div>
+    <div class="sec touch">
+      <div class="lbl">Touchpoints</div>
+      <ul>
+        <li><span class="tp">Commons</span><span class="rt">/s/:id/commons</span>
+          <span class="d">Card feed; toggle scopes; cards expand in place, reply slot inside</span></li>
+        <li><span class="tp">Contribute</span><span class="rt">/s/:id/commons/new</span>
+          <span class="d">Compose + files; publish-to checkboxes: Stone and/or Public (≥1)</span></li>
+        <li><span class="tp">My Journal</span><span class="rt">/s/:id/journal</span>
+          <span class="d">Private by default; per-entry shares: Stone / Commons / Team / PE-soon</span></li>
+      </ul>
+    </div>
+    <div class="sec leaves">
+      <div class="lbl">Leaves behind</div>
+      <div class="chips">
+        <span class="lchip art"><span class="g">✦</span>commons post</span>
+        <span class="lchip art"><span class="g">✦</span>reply · slot spent</span>
+        <span class="lchip art"><span class="g">✦</span>journal entry</span>
+        <span class="lchip trace"><span class="g">◦</span>scope choices</span>
+        <span class="lchip path"><span class="g">→</span>stone feed ⇄ public feed</span>
+        <span class="lchip conn"><span class="g">⇄</span>reply link · holder↔holder</span>
+      </div>
+    </div>
+    <div class="sec learn">
+      <div class="lbl">Field-test learning</div>
+      <ul>
+        <li><b>Contribution rate</b> per holder; reply-slot usage</li>
+        <li>Which <b>share scopes</b> do people actually choose? (feeds F8 call)</li>
+      </ul>
+    </div>
+    <div class="sec tech">
+      <div class="lbl">Tech reqs</div>
+      <ul>
+        <li>posts w/ dual scopes {stone, public}</li>
+        <li>reply slot: OPEN→CLOSED, terminal</li>
+        <li>media upload, client-side downscale</li>
+        <li>attribution by holder ordinal (R3)</li>
+      </ul>
+    </div>
+    <div class="callout risk">
+      <div class="clbl">Where it breaks</div>
+      <ul>
+        <li>Names in shared spaces break the anonymity the tone needs</li>
+        <li>Scope confusion — posts land where unintended</li>
+      </ul>
+    </div>
+    <div class="callout answer">
+      <div class="clbl">The design answer</div>
+      <ul>
+        <li><b>R3</b> — ordinal attribution, never identity</li>
+        <li>Scope matrix fixed; subtle scope marker on cards</li>
+      </ul>
+    </div>
+    <div class="sec flowctx">
+      <div class="lbl">Flow context</div>
+      <div class="fl"><b class="id">C</b><b class="nm">Commons</b> — read Stone ⇄ Public feeds, contribute, spend a one-time reply slot. My Journal rides alongside as the F8 module.</div>
+    </div>
+    <div class="stat">
+      <span class="schip ok">UI built</span>
+      <span class="schip warn">expanded card · to design</span>
+      <span class="schip open">F8 my journal · open</span>
+      <span class="deps">needs M2</span>
+    </div>
+    <div class="who"><span class="k">Flow C · F8</span><span class="v">Holder · anonymous</span></div>
+  </section>
+
+  <!-- ─── 5 GIFT ─── -->
+  <section class="stage claim">
+    <div class="badge">5</div>
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 44 44">
+        <rect x="8" y="18" width="28" height="18" rx="2"/>
+        <path d="M8 25h28M22 18v18"/>
+        <path d="M22 18c-6 0-9-3-9-6a3.5 3.5 0 0 1 7 0c0 3 2 6 2 6zM22 18c6 0 9-3 9-6a3.5 3.5 0 0 0-7 0c0 3-2 6-2 6z"/>
+      </svg>
+    </div>
+    <h2>Gift</h2>
+    <p class="summary">The handoff — and the one ask. Leave something for the next holder; decide whether to keep following.</p>
+    <div class="sec doing">
+      <div class="lbl">Doing</div>
+      <ul>
+        <li>Composes a <b>parting gift</b>; confirms the handoff</li>
+        <li>Asked once: <b>&ldquo;want to see where it goes?&rdquo;</b> — email, or let it go</li>
+        <li>Stone <b>resets</b> for its next holder</li>
+      </ul>
+    </div>
+    <div class="sec think">
+      <div class="lbl">Thinking</div>
+      <p>&ldquo;This ends our conversation. I&rsquo;d like to see where it goes.&rdquo;</p>
+    </div>
+    <div class="sec touch">
+      <div class="lbl">Touchpoints</div>
+      <ul>
+        <li><span class="tp">Gift the Stone</span><span class="rt">/s/:id/gift</span>
+          <span class="d">Compose + files; confirm dialog — &ldquo;this ends your conversation&rdquo;</span></li>
+        <li><span class="tp">Keep Following</span><span class="rt">A1 · in-flow</span>
+          <span class="d">One email field, one skip; states what&rsquo;s kept: chain, commons, archive</span></li>
+        <li><span class="tp">Claim email</span><span class="rt">transactional</span>
+          <span class="d">Single button; 7-day single-use token; day-6 reminder (T6)</span></li>
+      </ul>
+    </div>
+    <div class="sec leaves">
+      <div class="lbl">Leaves behind</div>
+      <div class="chips">
+        <span class="lchip art"><span class="g">✦</span>parting gift → chain</span>
+        <span class="lchip trace"><span class="g">◦</span>pairing sealed · ordinal n</span>
+        <span class="lchip trace"><span class="g">◦</span>claim token · 7d</span>
+        <span class="lchip path"><span class="g">→</span>stone hop · n → n+1</span>
+        <span class="lchip conn"><span class="g">⇄</span>chain link · giver → next</span>
+        <span class="lchip conn"><span class="g">⇄</span>email ↔ pairing · pending</span>
+      </div>
+    </div>
+    <div class="sec learn">
+      <div class="lbl">Field-test learning</div>
+      <ul>
+        <li><b>Claim rate at gifting</b> — target ≥40%; the account layer&rsquo;s whole argument</li>
+        <li>Skip reasons — is the ask trusted?</li>
+      </ul>
+    </div>
+    <div class="sec tech">
+      <div class="lbl">Tech reqs</div>
+      <ul>
+        <li>pairing-end + stone-reset event</li>
+        <li>claim token issue: single-use, 7d TTL</li>
+        <li>transactional email sender class</li>
+        <li>gift text commits before media upload (P7)</li>
+      </ul>
+    </div>
+    <div class="callout risk">
+      <div class="clbl">Where it breaks</div>
+      <ul>
+        <li>The ask reads as marketing — distrust at the emotional peak</li>
+        <li>Email captured after reset = the giver is already gone</li>
+      </ul>
+    </div>
+    <div class="callout answer">
+      <div class="clbl">The design answer</div>
+      <ul>
+        <li><b>D2</b> — ask inside the gift flow, <b>pre-reset</b>, one-tap skip</li>
+        <li>Gifting never blocked on auth</li>
+      </ul>
+    </div>
+    <div class="sec flowctx">
+      <div class="lbl">Flow context</div>
+      <div class="fl"><b class="id">D</b><b class="nm">Gift</b> — parting gift joins the chain → &ldquo;keep following?&rdquo; ask → stone resets. The claim offer lives inside this flow, pre-reset (D2).</div>
+    </div>
+    <div class="stat">
+      <span class="schip ok">gift UI built</span>
+      <span class="schip warn">claim step · to design</span>
+      <span class="deps">needs A1 · A2</span>
+    </div>
+    <div class="who"><span class="k">Flow D</span><span class="v">Giver · the claim</span></div>
+  </section>
+
+  <!-- ─── 6 FOLLOW ─── -->
+  <section class="stage">
+    <div class="badge">6</div>
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 44 44">
+        <rect x="7" y="12" width="30" height="21" rx="3"/>
+        <path d="M7 15l15 11 15-11"/>
+        <path d="M14 38h16"/>
+      </svg>
+    </div>
+    <h2>Follow</h2>
+    <p class="summary">The afterlife: the stone&rsquo;s life goes on, and its past holder keeps a quiet line of sight.</p>
+    <div class="sec doing">
+      <div class="lbl">Doing</div>
+      <ul>
+        <li>Taps the <b>magic link</b> — lands on <b>My Stones</b></li>
+        <li>Watches <b>new gifts</b> join the chain; reads stone commons</li>
+        <li>Revisits the <b>archive</b>; hears only when something real happens</li>
+      </ul>
+    </div>
+    <div class="sec think">
+      <div class="lbl">Thinking</div>
+      <p>&ldquo;A new holder left a gift today.&rdquo;</p>
+    </div>
+    <div class="sec touch">
+      <div class="lbl">Touchpoints</div>
+      <ul>
+        <li><span class="tp">Email</span><span class="rt">T1 · T2 · T3</span>
+          <span class="d">New gift / your reply / weekly digest; 1-a-day cap; deep-linked</span></li>
+        <li><span class="tp">My Stones</span><span class="rt">/me</span>
+          <span class="d">Card per pairing: image, held-dates, activity dot</span></li>
+        <li><span class="tp">Afterlife</span><span class="rt">/me/pairings/:id</span>
+          <span class="d">Gifts since your tenure, stone commons (read-only), provenance</span></li>
+        <li><span class="tp">Archive</span><span class="rt">…/archive</span>
+          <span class="d">Your gift, contributions, journal entries, PE journal of your tenure</span></li>
+      </ul>
+    </div>
+    <div class="sec leaves">
+      <div class="lbl">Leaves behind</div>
+      <div class="chips">
+        <span class="lchip art"><span class="g">✦</span>account</span>
+        <span class="lchip art"><span class="g">✦</span>archive · assembled</span>
+        <span class="lchip trace"><span class="g">◦</span>session · 90d sliding</span>
+        <span class="lchip trace"><span class="g">◦</span>seen cursor</span>
+        <span class="lchip path"><span class="g">→</span>email → afterlife deep link</span>
+        <span class="lchip conn"><span class="g">⇄</span>pairing ↔ account · claimed</span>
+        <span class="lchip conn"><span class="g">⇄</span>account ↔ stone · follows</span>
+      </div>
+    </div>
+    <div class="sec learn">
+      <div class="lbl">Field-test learning</div>
+      <ul>
+        <li><b>Email → deep-link rate</b>; return visits per account/month</li>
+        <li>Does read-only feel right, or do past holders want a voice? (tests D6)</li>
+      </ul>
+    </div>
+    <div class="sec tech">
+      <div class="lbl">Tech reqs</div>
+      <ul>
+        <li>magic-link verify; HttpOnly 90d sliding session (P3)</li>
+        <li>notification classes + prefs + unsubscribe</li>
+        <li>SEEN_CURSOR per pairing (activity dot)</li>
+        <li>works fully in plain browser (P1)</li>
+      </ul>
+    </div>
+    <div class="callout risk">
+      <div class="clbl">Where it breaks</div>
+      <ul>
+        <li>Magic link opens in browser, not installed PWA — split session</li>
+        <li>Notification noise betrays the register</li>
+      </ul>
+    </div>
+    <div class="callout answer">
+      <div class="clbl">The design answer</div>
+      <ul>
+        <li><b>P1 · P2</b> — browser-first afterlife; app re-requests a link</li>
+        <li>Anti-triggers + cap; afterlife read-only (<b>D6</b>)</li>
+      </ul>
+    </div>
+    <div class="sec flowctx">
+      <div class="lbl">Flow context</div>
+      <div class="fl"><b class="id">E</b><b class="nm">Claim</b> — magic link verifies email; the pairing attaches to an account.</div>
+      <div class="fl"><b class="id">F</b><b class="nm">Afterlife</b> — My Stones → new gifts, stone commons (read-only), own archive.</div>
+      <div class="fl"><b class="id">G</b><b class="nm">Notifications</b> — event-driven email only; opt-in, capped, deep-linked.</div>
+    </div>
+    <div class="stat">
+      <span class="schip warn">all screens · to design</span>
+      <span class="schip open">backend A/B · open</span>
+      <span class="deps">needs A4–A9 · doc 07</span>
+    </div>
+    <div class="who"><span class="k">Flows E · F · G</span><span class="v">Past holder · account</span></div>
+  </section>
+
+</div>
+
+<!-- Emotions — fluid curve -->
+<div class="emotions">
+  <div class="lbl-row">Emotions</div>
+  <div class="e-wrap">
+    <svg class="curve" viewBox="0 0 600 110" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="22" x2="600" y2="22" stroke="#EAE2DE" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      <line x1="0" y1="55" x2="600" y2="55" stroke="#EAE2DE" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      <line x1="0" y1="88" x2="600" y2="88" stroke="#EAE2DE" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      <!-- centers x = 50,150,250,350,450,550 ; y = 62,45,18,28,78,25 -->
+      <path d="M50,62 C85,56 115,51 150,45 C190,38 215,22 250,18 C285,15 315,22 350,28 C390,35 415,72 450,78 C487,84 517,42 550,25"
+            fill="none" stroke="#A31621" stroke-width="2.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <div class="e-grid" role="img" aria-label="Emotion curve across the six stages: curious, welcomed, absorbed, connected, bittersweet, tethered">
+      <div class="e-cell"><span class="e-dot" style="top:56.4%"></span></div>
+      <div class="e-cell"><span class="e-dot" style="top:40.9%"></span></div>
+      <div class="e-cell"><span class="e-dot" style="top:16.4%"></span></div>
+      <div class="e-cell"><span class="e-dot" style="top:25.5%"></span></div>
+      <div class="e-cell"><span class="e-dot hollow" style="top:70.9%"></span></div>
+      <div class="e-cell"><span class="e-dot" style="top:22.7%"></span></div>
+    </div>
+    <div class="e-grid">
+      <div class="e-text"><div class="nm">Curious</div><div class="why">a stone that talks back</div></div>
+      <div class="e-text"><div class="nm">Welcomed</div><div class="why">a gift was waiting</div></div>
+      <div class="e-text"><div class="nm">Absorbed</div><div class="why">it remembers, gently</div></div>
+      <div class="e-text"><div class="nm">Connected</div><div class="why">part of a chain of strangers</div></div>
+      <div class="e-text"><div class="nm">Bittersweet</div><div class="why">letting it go, wanting to follow</div></div>
+      <div class="e-text"><div class="nm">Tethered</div><div class="why">its life goes on, in view</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="band">
+  <div class="seg">
+    <h3>Stone Context</h3>
+    <p>Anonymous · one stone, held · stages 1–4</p>
+  </div>
+  <div class="seg mid">
+    <h3>The Claim</h3>
+    <p>Gift + magic link · stage 5</p>
+  </div>
+  <div class="seg">
+    <h3>Collection Context</h3>
+    <p>Account · every stone, followed · stage 6</p>
+  </div>
+</div>
+
+<div class="legend">
+  <span><span class="schip ok">built</span> exists in prototype</span>
+  <span><span class="schip warn">to design</span> specified in docs, screen missing (M/A ids)</span>
+  <span><span class="schip open">open</span> product call pending (F8, backend A/B…)</span>
+  <span>ids: <b>M#</b> missing screens · <b>A#</b> account screens · <b>D/P/R/T#</b> decisions per docs 02–06</span>
+</div>
+<div class="legend">
+  <span>leaves behind —</span>
+  <span><span class="lchip trace"><span class="g">◦</span>trace</span> data record left</span>
+  <span><span class="lchip path"><span class="g">→</span>path</span> route traveled</span>
+  <span><span class="lchip art"><span class="g">✦</span>artifact</span> content created</span>
+  <span><span class="lchip conn"><span class="g">⇄</span>connection</span> relationship formed</span>
+</div>
+
+<p class="foot">Stonemaps · Field Test 2026 · sourced from IA/UXD docs 00–07 · flows A–G</p>
+
+</body>
+</html>

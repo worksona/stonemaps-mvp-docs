@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screen & Component Inventory · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html">Library</a>
+<a href="00-concept-glossary.html">00 · Glossary</a>
+<a href="01-screen-inventory.html" aria-current="page">01 · Inventory</a>
+<a href="02-site-map-ia.html">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html">03 · Flows</a>
+<a href="04-data-state-requirements.html">04 · Data & State</a>
+<a href="05-notifications-reengagement.html">05 · Notifications</a>
+<a href="06-pwa-constraints.html">06 · PWA</a>
+<a href="07-backend-brief.html">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — Screen &amp; Component Inventory</h1>
+<p><strong>Doc 1 of the IA/UXD documentation set · Phase 0</strong>
+Status: Draft v1 · 2026-07-02
+Source: the 10 HTML prototype screens + assets/ in this folder, cross-checked against PE-FT-workflow-V5.jpg. Terms per <a href="00-concept-glossary.html">00-concept-glossary.md</a>.</p>
+<p>Purpose: a complete, factual record of what the prototype actually contains — screens, navigation model, components, design tokens — plus flagged inconsistencies. This is the baseline both UI design and development build from.</p>
+<hr />
+<h2>1. Screen inventory</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>File</th>
+<th>Screen</th>
+<th>Type</th>
+<th>Nav state</th>
+<th>In workflow V5?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>1-landing.html</code></td>
+<td>Field Test Landing ("what is this?")</td>
+<td>Scroll page, own design language</td>
+<td>No app nav</td>
+<td>Yes ("PE Field Test Intro")</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>2-welcome-image.html</code></td>
+<td>Welcome (previous holder's gift)</td>
+<td>App frame</td>
+<td>All greyed</td>
+<td>Yes ("Welcome")</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>3-planetary-emissary.html</code></td>
+<td>PE Intro (what am I? + disclosures)</td>
+<td>App frame</td>
+<td>All greyed</td>
+<td>Yes ("PE Intro")</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>4-pe-conversation.html</code></td>
+<td>PE Conversation (chat)</td>
+<td>App frame</td>
+<td>Emissary active</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>5-the-commons.html</code></td>
+<td>The Commons (feed)</td>
+<td>App frame</td>
+<td>Commons active</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>5b</td>
+<td><code>5b-contribute.html</code></td>
+<td>Contribute to the Commons (compose)</td>
+<td>App frame, modal-style (✕ close)</td>
+<td>Commons active</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>6-pe-journal.html</code></td>
+<td>PE Journal (stone's entries)</td>
+<td>App frame, modal-style (✕ close)</td>
+<td>none active</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>6b</td>
+<td><code>6b-journal-entry.html</code></td>
+<td>My Journal — New Entry (compose)</td>
+<td>App frame</td>
+<td>Journal active</td>
+<td><strong>No — post-V5 addition</strong></td>
+</tr>
+<tr>
+<td>6c</td>
+<td><code>6c-my-journal.html</code></td>
+<td>My Journal (holder's entries)</td>
+<td>App frame</td>
+<td>Journal active</td>
+<td><strong>No — post-V5 addition</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>7-gift-the-stone.html</code></td>
+<td>Gift the Stone (compose parting gift)</td>
+<td>App frame, modal-style (✕ close)</td>
+<td>Gift icon active</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Not yet designed (referenced but missing):</strong></p>
+<ul>
+<li><strong>The Gifts</strong> — chain view of all gifts ("view all of them" link on Welcome; "The Gifts" pill on Commons). Both link to <code>#</code>.</li>
+<li><strong>Commons card expanded</strong> + <strong>reply slot</strong> ("leave something in return") — described in workflow notes, no screen.</li>
+<li><strong>Terms / Fineprint / FAQ</strong> — linked from PE Intro, all <code>#</code>.</li>
+<li><strong>Rename / Edit</strong> Emissary — linked from Conversation header, <code>#</code>.</li>
+<li>All <strong>Phase 2 account screens</strong> (claim, sign-in, holder profile/collection, notification settings) — to be specified in Doc 2/3.</li>
+</ul>
+<hr />
+<h2>2. Navigation model</h2>
+<p>Persistent bottom nav (<code>nav-base.svg</code> housing), identical structure on all app-frame screens:</p>
+<pre><code>[ Gift icon ] [ Emissary | Commons | Journal ] [ Pre-sale icon ]
+   left            three center tabs               right
+</code></pre>
+<ul>
+<li><strong>Left icon — Gift the Stone.</strong> States: greyed (pre-conversation), resting, active (on screen 7). Opens screen 7.</li>
+<li><strong>Center tabs.</strong> States: active / resting / greyed. Pre-conversation (screens 2–3) all three are greyed and non-links (<code>&lt;span&gt;</code>).</li>
+<li><strong>Right icon — Pre-sale.</strong> Always enabled, external link to <code>stonemaps.org/exec-sum/es-presale.html</code> (new tab). Present even in the greyed pre-conversation state.</li>
+<li><strong>Floating pill(s)</strong> above the nav carry the screen's primary action (Start a Conversation, Continue, View PE Journal, Contribute, Publish, Save/Publish, Gift Stone, New Entry).</li>
+</ul>
+<h3>Nav routing facts (as coded)</h3>
+<ul>
+<li><strong>Journal tab → <code>6b-journal-entry.html</code> (New Entry), not the journal list.</strong> Compose-first entry into My Journal. ⚠️ Verify intentional; convention would be list-first (6c) with New Entry as the pill action — as it is, "View Journal" is a secondary pill on the compose screen.</li>
+<li><strong>PE Journal is not on the nav</strong> — reachable only via "View PE Journal" pill on the Conversation screen.</li>
+<li><strong>Screen 6 (PE Journal) has no active tab</strong> — it sits outside the tab structure, consistent with modal-style presentation.</li>
+<li><strong>Gift Stone pill on screen 7 → <code>1-landing.html</code></strong> — prototype shorthand for "reset and hand off"; the real flow needs a confirmation + post-gift state (Doc 2), since this is also the designated <strong>claim moment</strong> for accounts.</li>
+<li>Close (✕) buttons use <code>javascript:history.back()</code> — real app needs defined back-targets.</li>
+</ul>
+<hr />
+<h2>3. Two design languages</h2>
+<p>The prototype contains <strong>two deliberate-looking but unreconciled visual systems</strong>:</p>
+<h3>A. Landing / artifact language (<code>1-landing.html</code> only)</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Background</td>
+<td><code>#3a3733</code> (warm dark grey)</td>
+</tr>
+<tr>
+<td>Accent</td>
+<td><code>--amber #c8862a</code></td>
+</tr>
+<tr>
+<td>Text</td>
+<td><code>--white #f0ede8</code></td>
+</tr>
+<tr>
+<td>Display face</td>
+<td>Cormorant Garamond (300, italic)</td>
+</tr>
+<tr>
+<td>Body/label face</td>
+<td>IBM Plex Mono (300/400)</td>
+</tr>
+<tr>
+<td>Layout</td>
+<td>full-page scroll, max-width 480px, staggered fadeIn (with <code>prefers-reduced-motion</code> support)</td>
+</tr>
+<tr>
+<td>CTA style</td>
+<td>rectangular amber block button, uppercase mono</td>
+</tr>
+</tbody>
+</table></div>
+<h3>B. App frame language (screens 2–7)</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--map-ground</code></td>
+<td><code>#3c1912</code> (deep umber) + layered map-hatch gradients</td>
+</tr>
+<tr>
+<td><code>--gold</code></td>
+<td><code>#d9a441</code></td>
+</tr>
+<tr>
+<td><code>--cream</code></td>
+<td><code>#f1e9da</code></td>
+</tr>
+<tr>
+<td><code>--panel</code></td>
+<td><code>#2a2019</code></td>
+</tr>
+<tr>
+<td><code>--ink</code></td>
+<td><code>#181410</code></td>
+</tr>
+<tr>
+<td><code>--rule</code></td>
+<td><code>rgba(241,233,218,.18)</code></td>
+</tr>
+<tr>
+<td>Heading/label face</td>
+<td>Jost (200–500, uppercase, tracked)</td>
+</tr>
+<tr>
+<td>Body face</td>
+<td>Source Sans 3 (300/400, italic for quoted/gift content)</td>
+</tr>
+<tr>
+<td>Layout</td>
+<td>fixed 390×844 device frame, 34px radius, 7px bezel</td>
+</tr>
+<tr>
+<td>Buttons</td>
+<td>pill (999px radius), metallic gradient states</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Assessment:</strong> plausibly intentional — the landing is the "physical artifact" page a QR code on the stone resolves to (poetic, print-like), while screens 2–7 are the app product. But amber <code>#c8862a</code> vs gold <code>#d9a441</code> and the two unrelated font pairings should be an explicit decision, not drift. <strong>Recommendation:</strong> keep two languages, but derive both from one token set (shared hue anchors, one scale). Decide in Phase 1.</p>
+<p>⚠️ <strong>CSS bug in landing:</strong> <code>--white-dim</code> and <code>--white-faint</code> are both <code>rgba(240,237,232,1.5)</code> — alpha 1.5 is invalid (clamps to 1), so "dim" and "faint" text renders at full opacity. Intended values presumably ~0.75 / ~0.5.</p>
+<hr />
+<h2>4. Component inventory (app frame)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Where used</th>
+<th>States / variants</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Device frame</strong></td>
+<td>all app screens</td>
+<td>—</td>
+<td>390×844, bezel, map-ground layered background</td>
+</tr>
+<tr>
+<td><strong>Top bar</strong></td>
+<td>5b, 6, 6b, 6c, 7</td>
+<td>with/without ✕ close</td>
+<td>Jost 14px gold uppercase title; <code>···</code> separator for context ("PE Journal ··· Pierrot")</td>
+</tr>
+<tr>
+<td><strong>Screen header</strong> (name + trait + edit)</td>
+<td>4</td>
+<td>—</td>
+<td>Emissary name 24px gold, trait italic, Rename/Edit underlined link</td>
+</tr>
+<tr>
+<td><strong>Pill button</strong></td>
+<td>all</td>
+<td><code>resting</code>, <code>active</code>, <code>greyed</code>, <code>outline</code></td>
+<td>999px radius; resting = grey metallic gradient, active = gold metallic, outline = transparent w/ border</td>
+</tr>
+<tr>
+<td><strong>Tab</strong></td>
+<td>nav</td>
+<td><code>active</code>, <code>resting</code>, <code>greyed</code></td>
+<td>same gradient system as pills, 10px Jost</td>
+</tr>
+<tr>
+<td><strong>Nav bar</strong></td>
+<td>all app screens</td>
+<td>per-screen state matrix (§2)</td>
+<td>SVG base + 2 icon slots + 3 tabs</td>
+</tr>
+<tr>
+<td><strong>Floating action row</strong></td>
+<td>all app screens</td>
+<td>1–2 pills</td>
+<td>primary action above nav; 6b stacks two rows (Save/Publish + View Journal)</td>
+</tr>
+<tr>
+<td><strong>Gift box / card</strong></td>
+<td>2 (Welcome)</td>
+<td><code>image</code> (circular framed photo), <code>text</code></td>
+<td>expand icon top-right; circular 8px <code>#d8d3c9</code> border on image variant</td>
+</tr>
+<tr>
+<td><strong>Commons card</strong></td>
+<td>5</td>
+<td>photo + caption; expandable</td>
+<td>4:3 photo, italic caption; expanded state <strong>not designed</strong></td>
+</tr>
+<tr>
+<td><strong>Compose box</strong></td>
+<td>5b, 6b, 7</td>
+<td>filled / placeholder</td>
+<td>panel bg (7, 5b) vs outlined translucent (6b) — two styles for same component, unify</td>
+</tr>
+<tr>
+<td><strong>"Add files…" affordance</strong></td>
+<td>5b, 6b, 7</td>
+<td>—</td>
+<td>gold text link, <code>+</code> prefix</td>
+</tr>
+<tr>
+<td><strong>Checkbox row</strong></td>
+<td>3, 5b, 6b, 6</td>
+<td>checked / empty / disabled</td>
+<td>20px SVG box + label (+sub-label in share lists); disabled = .4 opacity ("PE — coming soon")</td>
+</tr>
+<tr>
+<td><strong>Toggle</strong></td>
+<td>5 (Commons)</td>
+<td>left position only designed</td>
+<td>Stone/Public filter; right position + interaction not designed</td>
+</tr>
+<tr>
+<td><strong>Journal entry</strong></td>
+<td>6, 6c</td>
+<td>with/without "Shared with:" footer</td>
+<td>date label (gold, 11px) + note; 6c adds share attribution</td>
+</tr>
+<tr>
+<td><strong>Chat bubble</strong></td>
+<td>4</td>
+<td>stone message only</td>
+<td>holder message style <strong>not designed</strong>; cream chat sheet with 24px top radius</td>
+</tr>
+<tr>
+<td><strong>Chat input bar</strong></td>
+<td>4</td>
+<td>—</td>
+<td>attach icon + rounded field + mic icon</td>
+</tr>
+<tr>
+<td><strong>Disclosure row</strong></td>
+<td>3</td>
+<td>checked (journal notice) / empty (share consent)</td>
+<td>⚠️ the <em>pre-checked</em> box is the informational one; the <em>consent</em> one is empty — correct pattern, keep it</td>
+</tr>
+<tr>
+<td><strong>Empty state</strong></td>
+<td>6c (<code>.empty</code>, unused in markup)</td>
+<td>—</td>
+<td>styled but not instantiated</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Assets</h3>
+<p><code>nav-base.svg</code>, <code>gift-stone-button-{active,resting,greyed}.svg</code>, <code>pre-sale-button-resting.svg</code>, <code>card-expand.svg</code>, <code>chat-attach.svg</code>, <code>chat-mic.svg</code>, <code>checkbox-{checked,empty}.svg</code>, <code>12stones.jpg</code>, <code>sri-lanka.png</code>. Two Unsplash photos are hot-linked in Commons (<code>images.unsplash.com</code>) — replace with local/owned assets before any deploy. Fonts load from Google Fonts CDN — for a PWA, self-host (offline shell requirement, Doc 6).</p>
+<hr />
+<h2>5. Copy &amp; content system observations</h2>
+<ul>
+<li><strong>Voice:</strong> lowercase-intimate on landing ("what is this?"), spare and non-coercive in-app ("Doesn't ask for the story. Sits with what's carried."). Consent copy is plain-language, not legalese. This voice is a design asset — Doc 2 flows must specify copy in this register, especially for the account claim ask.</li>
+<li><strong>Privacy commitments made in copy</strong> (these are product constraints now):
+  1. "Your conversations are private and remain on your device and browser." (landing)
+  2. "The stone keeps a quiet journal… You can opt out on the journal screen." (Welcome, PE Intro, PE Journal)
+  3. "Entries remain private by default." (My Journal)
+  4. Conversation-sharing with the project team is opt-in (PE Intro, unchecked by default).</li>
+<li><strong>Placeholder inconsistency:</strong> Gift compose (7) shows filled sample text ("Mirror Mirror…") styled identically to 5b's <em>placeholder</em> styling; visually indistinguishable filled-vs-empty states. Unify compose component states.</li>
+<li>The "Mirror Mirror…" gift text on screen 7 reappears as a Commons card caption on screen 5 — implies <strong>a gift may also surface in the Commons/Gifts chain</strong>; the content-type relationship between Gifts and Commons posts needs explicit definition in Doc 3.</li>
+</ul>
+<hr />
+<h2>6. Flagged decisions carried into later docs</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Issue</th>
+<th>Where resolved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1</td>
+<td>Koozhankal vs Pierrot stone identity; is Emissary name holder-editable?</td>
+<td>Glossary §naming / Doc 2</td>
+</tr>
+<tr>
+<td>F2</td>
+<td>Journal tab compose-first vs list-first</td>
+<td>Doc 2 (IA/flows)</td>
+</tr>
+<tr>
+<td>F3</td>
+<td>Two design languages — formalize or unify</td>
+<td>Doc 5 tokens work, Phase 1</td>
+</tr>
+<tr>
+<td>F4</td>
+<td>Missing screens: The Gifts, Commons expanded card + reply slot, Terms/FAQ</td>
+<td>Doc 2 scope list</td>
+</tr>
+<tr>
+<td>F5</td>
+<td>Gift → landing reset shortcut; claim moment lives here</td>
+<td>Doc 2 (gift/claim flow)</td>
+</tr>
+<tr>
+<td>F6</td>
+<td>Gifts vs Commons posts content-model overlap</td>
+<td>Doc 3 (data &amp; state)</td>
+</tr>
+<tr>
+<td>F7</td>
+<td><code>--white-dim</code>/<code>--white-faint</code> alpha bug; unify compose states; replace hot-linked Unsplash images; self-host fonts</td>
+<td>Doc 5 / build backlog</td>
+</tr>
+<tr>
+<td>F8</td>
+<td>"My Journal scope TBD" — confirm it ships in MVP or is eval-only</td>
+<td>Product call before Doc 2 finalizes</td>
+</tr>
+</tbody>
+</table></div>
+</main>
+
+<div class="pager">
+<a href="00-concept-glossary.html">&larr; 00 · Glossary</a><span class="spacer"></span><a href="02-site-map-ia.html">02 · Site Map / IA &rarr;</a>
+</div>
+
+</body>
+</html>

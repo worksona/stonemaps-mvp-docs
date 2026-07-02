@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Map & Information Architecture · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html">Library</a>
+<a href="00-concept-glossary.html">00 · Glossary</a>
+<a href="01-screen-inventory.html">01 · Inventory</a>
+<a href="02-site-map-ia.html" aria-current="page">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html">03 · Flows</a>
+<a href="04-data-state-requirements.html">04 · Data & State</a>
+<a href="05-notifications-reengagement.html">05 · Notifications</a>
+<a href="06-pwa-constraints.html">06 · PWA</a>
+<a href="07-backend-brief.html">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — Site Map &amp; Information Architecture</h1>
+<p><strong>Doc 2 of the IA/UXD documentation set · Phase 1</strong>
+Status: Draft v1 · 2026-07-02
+Terms per <a href="00-concept-glossary.html">00-concept-glossary.md</a>; screen facts per <a href="01-screen-inventory.html">01-screen-inventory.md</a>. Backend-agnostic.</p>
+<hr />
+<h2>1. The two contexts</h2>
+<p>The app has exactly two top-level contexts, and one rule decides which you're in:</p>
+<blockquote>
+<p><strong>If the visitor has an active pairing (currently holds a stone) → Stone Context.
+Otherwise, if they have an account → Collection Context.
+Otherwise → the stone's Landing page (via QR/link) is the only way in.</strong></p>
+</blockquote>
+<ul>
+<li><strong>Stone Context</strong> — the existing prototype: everything is scoped to <em>the stone you hold now</em>. Anonymous by default; an account is never required here.</li>
+<li><strong>Collection Context</strong> (Phase 2, account layer) — for people <em>between or after</em> holdings: their stones, their archives, the afterlife of stones they've released.</li>
+</ul>
+<p>This preserves the MVP promise: accounts add a second context; they don't gate the first.</p>
+<h3>Device model (foundational assumption)</h3>
+<p>Each holder uses <strong>their own phone</strong>; the stone carries a QR that resolves to its Landing URL. Conversation privacy ("remains on your device and browser") is therefore natural — holder B's phone never contained holder A's conversation. "Reset" at gifting is a <strong>stone-state event</strong> (pairing ends, next holder starts fresh), not a device wipe.</p>
+<blockquote>
+<p>⚠️ Open: how a <strong>virtual stone</strong> hands off (no QR to scan — likely a one-time handoff link), and how the system binds "current holder" to a device (recommendation: first device to open the stone URL after a gifting event claims the active pairing; subsequent scanners get a "this stone is with someone right now" bystander view — bystander view TBD, could simply be the Landing page without conversation access).</p>
+</blockquote>
+<hr />
+<h2>2. Site map</h2>
+<pre><code>STONE CONTEXT (anonymous-first, per-stone)
+│
+├── 0. Landing  — &quot;what is this?&quot;                        [1-landing.html]
+│      · stone identity, traits, field-test frame
+│      · CTA: Talk to the stone
+│      · quiet link: &quot;Held a stone before?&quot; → Sign in    [NEW · A8]
+│
+├── First-time gate (once per pairing)
+│   ├── 1. Welcome — previous holder's gift              [2-welcome-image.html]
+│   │      └── The Gifts (chain view)                    [MISSING · M1]
+│   └── 2. PE Intro — disclosures, consent, T&amp;C links    [3-planetary-emissary.html]
+│          └── Terms / Fineprint / FAQ                   [MISSING · M3]
+│
+├── Tab: EMISSARY
+│   └── 3. PE Conversation                               [4-pe-conversation.html]
+│          ├── Rename / Edit emissary                    [MISSING · M4]
+│          └── 4. PE Journal (modal)                     [6-pe-journal.html]
+│
+├── Tab: COMMONS
+│   └── 5. The Commons (feed, Stone/Public toggle)       [5-the-commons.html]
+│          ├── The Gifts (chain view)                    [MISSING · M1, same as above]
+│          ├── Expanded card + one-time reply slot       [MISSING · M2]
+│          └── 6. Contribute (modal)                     [5b-contribute.html]
+│
+├── Tab: JOURNAL  (module: My Journal — removable, F8)
+│   └── 7. My Journal (list)                             [6c-my-journal.html]
+│          └── 8. New Entry (compose + share scopes)     [6b-journal-entry.html]
+│
+├── Nav-left: GIFT
+│   └── 9. Gift the Stone (modal)                        [7-gift-the-stone.html]
+│          ├── 10. Keep Following — email capture        [NEW · A1]
+│          ├── 11. Handoff confirmation / stone released [NEW · A2]
+│          └── → stone resets for next holder
+│
+└── Nav-right: PRE-SALE (external, stonemaps.org)
+
+COLLECTION CONTEXT (account layer, Phase 2)
+│
+├── 12. Sign in — email → magic link                     [NEW · A8]
+├── 13. Check your email / link sent                     [NEW · A9]
+├── 14. My Stones (collection home)                      [NEW · A4]
+│      └── 15. Stone afterlife view (per past pairing)   [NEW · A5]
+│             ├── Gifts chain since your time
+│             ├── Stone-scoped Commons activity
+│             ├── Provenance / where it's been
+│             └── 16. My archive from that pairing       [NEW · A6]
+│                    · my gift, my contributions,
+│                    · my journal entries,
+│                    · PE journal entries from my tenure
+└── 17. Settings — notifications, email, data &amp; privacy  [NEW · A7]
+</code></pre>
+<p><strong>Screen count:</strong> 10 built · 4 missing from designed flows (M1–M4) · 8 new for account layer (A1–A9, where A1/A2 fold into the gift flow).</p>
+<hr />
+<h2>3. Navigation architecture</h2>
+<h3>Stone Context — unchanged</h3>
+<p>The 4-slot nav from the prototype stays exactly as built: <code>[Gift] [Emissary | Commons | Journal] [Pre-sale]</code>, with the greyed pre-conversation state. Account features deliberately get <strong>no nav slot</strong> in Stone Context — the claim offer lives inside the gift flow (its natural moment), keeping the holding experience account-free.</p>
+<p><strong>Change from prototype (resolves F2):</strong> Journal tab → <strong>My Journal list (6c)</strong>, with New Entry as its pill action. Compose-first entry (current: tab → 6b) buries a holder's existing entries behind a compose screen; list-first matches the PE Journal pattern and every journal convention. If the team wants compose-first deliberately, reverse this and record why.</p>
+<h3>Collection Context — top bar, no bottom nav</h3>
+<p>Collection Context is shallow (list → detail → archive) and used occasionally, not habitually. It uses simple top-bar navigation (back arrows, settings icon on My Stones) rather than inventing a second tab system. If Collection Context grows later, revisit.</p>
+<h3>Entry points into Collection Context</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>From</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Post-gift</td>
+<td>Keep Following email capture → magic link → lands on My Stones with the just-released stone pinned</td>
+</tr>
+<tr>
+<td>Notification email</td>
+<td>Deep link → the relevant afterlife view (see Doc 6 for PWA deep-link constraints)</td>
+</tr>
+<tr>
+<td>Landing page</td>
+<td>Quiet "Held a stone before?" text link — must stay visually subordinate to "Talk to the stone"</td>
+</tr>
+<tr>
+<td>PWA icon, no active pairing</td>
+<td>My Stones (if signed in) or Landing of last-seen stone (if not)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Context switching</h3>
+<p>A signed-in user who currently holds a stone lives in Stone Context; their collection is reachable from <strong>My Journal / settings surface only after MVP</strong> — for the field test, keep the two contexts separate and simple: holding = stone context, released = collection context. Flag for post-field-test: persistent avatar/profile affordance.</p>
+<hr />
+<h2>4. Access &amp; gating matrix</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Anonymous holder</th>
+<th>Signed-in holder</th>
+<th>Signed-in past holder</th>
+<th>Bystander (scans held stone)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Landing page</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Welcome / gate / PE Conversation</td>
+<td>✓ (current holder)</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>PE Journal (this tenure)</td>
+<td>✓</td>
+<td>✓</td>
+<td>via archive (their tenure only)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Commons: read Stone feed</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓ (stones they've held)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Commons: read Public feed</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>⚠️ TBD</td>
+</tr>
+<tr>
+<td>Commons: contribute</td>
+<td>✓</td>
+<td>✓</td>
+<td>⚠️ TBD — recommend read-only afterlife in MVP</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Reply slot ("leave something in return")</td>
+<td>✓</td>
+<td>✓</td>
+<td>⚠️ TBD</td>
+<td>—</td>
+</tr>
+<tr>
+<td>My Journal</td>
+<td>✓ (device-local until claimed)</td>
+<td>✓ (synced)</td>
+<td>via archive</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Gift the Stone</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Keep Following / claim</td>
+<td>✓ (the conversion moment)</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Afterlife views, collection</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>The two ⚠️ TBDs (past-holder contribution rights, bystander Public feed) are product calls with real social consequences — recommend <strong>read-only afterlife</strong> for MVP: past holders watch, current holders speak. It keeps "one voice per stone at a time" and makes holding feel distinct from following.</p>
+<hr />
+<h2>5. URL / route structure (PWA)</h2>
+<p>Routes are the contract between IA and development; deep-linkability matters for magic links and notifications.</p>
+<pre><code>/                          → context resolver (active pairing? account? → redirect)
+/s/:stoneId                → Landing (QR target — this URL is printed/bound to the stone)
+/s/:stoneId/welcome        → first-time gate step 1
+/s/:stoneId/intro          → first-time gate step 2
+/s/:stoneId/emissary       → PE Conversation
+/s/:stoneId/emissary/journal → PE Journal
+/s/:stoneId/commons        → The Commons (?feed=stone|public)
+/s/:stoneId/commons/new    → Contribute
+/s/:stoneId/gifts          → The Gifts chain
+/s/:stoneId/journal        → My Journal
+/s/:stoneId/journal/new    → New Entry
+/s/:stoneId/gift           → Gift the Stone flow
+/auth                      → Sign in (email entry)
+/auth/sent                 → check-your-email
+/auth/verify?token=…       → magic-link target → session established
+/me                        → My Stones
+/me/pairings/:pairingId    → Stone afterlife view
+/me/pairings/:pairingId/archive → My archive
+/me/settings               → Settings &amp; notifications
+</code></pre>
+<p>Notes:
+- <code>:stoneId</code> in the printed QR is permanent for the stone's life — choose an opaque, unguessable id (stone URLs will be shared and photographed).
+- Guard every <code>/s/:stoneId/*</code> route below Landing behind the current-holder check (§1 device model).
+- <code>/auth/verify</code> must work when opened in a browser tab that is <em>not</em> the installed PWA — see Doc 6 before implementing.</p>
+<hr />
+<h2>6. IA decisions recorded (and their rationale)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td>Two contexts, one resolver rule</td>
+<td>Keeps anonymous MVP intact; accounts additive, never gating</td>
+</tr>
+<tr>
+<td>D2</td>
+<td>Claim moment = inside gift flow, pre-reset</td>
+<td>Email must be captured before the pairing ends; it's also the emotional peak ("keep following it")</td>
+</tr>
+<tr>
+<td>D3</td>
+<td>Journal tab → list-first (reverses prototype routing)</td>
+<td>F2; convention + parity with PE Journal</td>
+</tr>
+<tr>
+<td>D4</td>
+<td>No account affordance in Stone Context nav</td>
+<td>Protects the artifact feel; conversion happens at gifting, per product direction</td>
+</tr>
+<tr>
+<td>D5</td>
+<td>Collection Context = top-bar nav, no tabs</td>
+<td>Shallow hierarchy; avoid second nav system</td>
+</tr>
+<tr>
+<td>D6</td>
+<td>Past holders read-only in afterlife (MVP recommendation)</td>
+<td>"One voice per stone at a time"; simplifies moderation and reply-slot semantics</td>
+</tr>
+<tr>
+<td>D7</td>
+<td>Stone URL permanent + opaque</td>
+<td>QR is physically printed; ids will leak into photos</td>
+</tr>
+</tbody>
+</table></div>
+<h2>7. Open items feeding Doc 3+</h2>
+<ul>
+<li>Virtual-stone handoff mechanics (no QR) — flow needed before dev.</li>
+<li>Bystander experience when scanning a held stone.</li>
+<li>Whether The Gifts chain is globally visible or holder/past-holder-only.</li>
+<li>My Journal module in/out (F8) — carried as removable; routes reserved either way.</li>
+</ul>
+</main>
+
+<div class="pager">
+<a href="01-screen-inventory.html">&larr; 01 · Inventory</a><span class="spacer"></span><a href="03-core-user-flows.html">03 · Flows &rarr;</a>
+</div>
+
+</body>
+</html>

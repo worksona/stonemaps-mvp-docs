@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification & Re-engagement Spec · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html">Library</a>
+<a href="00-concept-glossary.html">00 · Glossary</a>
+<a href="01-screen-inventory.html">01 · Inventory</a>
+<a href="02-site-map-ia.html">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html">03 · Flows</a>
+<a href="04-data-state-requirements.html">04 · Data & State</a>
+<a href="05-notifications-reengagement.html" aria-current="page">05 · Notifications</a>
+<a href="06-pwa-constraints.html">06 · PWA</a>
+<a href="07-backend-brief.html">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — Notification &amp; Re-engagement Spec</h1>
+<p><strong>Doc 5 of the IA/UXD documentation set</strong>
+Status: Draft v1 · 2026-07-02
+Principles fixed in Flow G (<a href="03-core-user-flows.html">03-core-user-flows.md</a>): event-driven not engagement-bait; email first, push later; every message deep-links to what it describes.</p>
+<hr />
+<h2>1. Who gets notified about what</h2>
+<p>Only <strong>claimed past holders</strong> receive notifications (current holders are <em>in</em> the app; anonymous past holders are unreachable by definition). All triggers are scoped to stones in the account's collection.</p>
+<h3>Trigger matrix</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Event</th>
+<th>Default</th>
+<th>Channel</th>
+<th>Latency</th>
+<th>Recipient scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>New gift joins the chain of a stone you held</td>
+<td>ON</td>
+<td>email</td>
+<td>≤1h</td>
+<td>all claimed past holders of that stone</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Your commons post / gift received its one reply</td>
+<td>ON</td>
+<td>email</td>
+<td>≤1h</td>
+<td>the author's account</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>Stone-scoped commons activity digest</td>
+<td>OFF</td>
+<td>email</td>
+<td>weekly, fixed day</td>
+<td>opted-in past holders</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>Stone changed hands (provenance hop)</td>
+<td>OFF (fold into T1/T3 initially)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>Claim link ("keep following")</td>
+<td>n/a — transactional</td>
+<td>email</td>
+<td>immediate</td>
+<td>the gifting holder</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>Claim link expiring reminder</td>
+<td>ON</td>
+<td>email</td>
+<td>day 6 of 7, once</td>
+<td>pending claims only</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Anti-triggers (never send):</strong> inactivity nudges, "you haven't visited", streaks, marketing inside the notification stream. The pre-sale audience is a separate consented list — never merge them.</p>
+<p><strong>Volume guard:</strong> hard cap of 1 non-transactional email per account per day; excess events coalesce into one "a few things happened around <Stone>" message.</p>
+<hr />
+<h2>2. Message anatomy (email)</h2>
+<p>Every notification email:
+1. <strong>Subject in the product voice, event-first.</strong> <em>"A new gift joined Pierrot's chain"</em> — never <em>"You have 1 notification"</em>.
+2. <strong>One glimpse of content</strong> (first line of the gift / the reply text) — enough to feel it, not enough to make opening pointless.
+3. <strong>One button</strong>, deep-linked: <code>/me/pairings/:id?focus=gift-:id</code> etc.
+4. Footer: per-trigger unsubscribe (one tap, no login) + link to <code>/me/settings</code>.
+5. Plain, mostly-text template matching the artifact aesthetic — no marketing chrome.</p>
+<p>Attribution in notifications follows R3 (Doc 4): <em>"the stone's fifth holder"</em>, never names.</p>
+<hr />
+<h2>3. Channel strategy</h2>
+<h3>Email (MVP)</h3>
+<p>The claim flow guarantees a verified address — email is the reliable channel and the only one MVP needs. Requires a transactional sender (claim links = transactional; T1–T3 = notification class) with separate sending domains or categories so unsubscribing from notifications never blocks claim/auth mail. <strong>This distinction is a launch blocker if missed.</strong></p>
+<h3>Web push (post-MVP, deliberately deferred)</h3>
+<ul>
+<li>iOS: push requires the PWA installed to home screen (16.4+), permission prompt only from a user gesture inside the installed app.</li>
+<li>Rollout rule from Flow G: offer push only after the user has engaged with ≥1 email deep link — evidence they want the loop before we ask for the OS prompt (a denied prompt is near-unrecoverable).</li>
+<li>When added: T1 and T2 only. Digests stay email.</li>
+</ul>
+<hr />
+<h2>4. Opt-in surface</h2>
+<p>Single screen after first My Stones visit (Flow G), then editable at <code>/me/settings</code>:</p>
+<pre><code>Hear when something happens?
+[✓] A new holder leaves a gift
+[✓] Someone replies to something you left
+[ ] Weekly digest of stone commons activity
+[Save]   [Not now]
+</code></pre>
+<p>"Not now" = all OFF except transactional; never re-prompted unprompted (settings discoverable, a single passive hint allowed on the afterlife view: <em>"quiet by default — turn on whispers in settings"</em>).</p>
+<hr />
+<h2>5. The full re-engagement loop (system view)</h2>
+<pre><code>holder gifts stone ──▶ claim email (T5) ──▶ account + prefs
+        ▼                                        │
+next holder's activity: gift (T1) / reply (T2) ──▶ email ──▶ deep link
+        ▼                                                       │
+   afterlife view (activity dot cleared, SEEN_CURSOR advances) ◀┘
+        ▼
+   [post-field-test hooks: request-a-stone, pre-sale interest — OUT of MVP]
+</code></pre>
+<p>Success metrics for the field test: claim rate at gifting (target: decide with team, suggest ≥40%), email open→deep-link rate, return visits per claimed account per month. Instrument these three from day one; they are the whole argument for the account layer.</p>
+</main>
+
+<div class="pager">
+<a href="04-data-state-requirements.html">&larr; 04 · Data & State</a><span class="spacer"></span><a href="06-pwa-constraints.html">06 · PWA &rarr;</a>
+</div>
+
+</body>
+</html>

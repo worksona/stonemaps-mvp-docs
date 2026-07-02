@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Core User Flows · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html">Library</a>
+<a href="00-concept-glossary.html">00 · Glossary</a>
+<a href="01-screen-inventory.html">01 · Inventory</a>
+<a href="02-site-map-ia.html">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html" aria-current="page">03 · Flows</a>
+<a href="04-data-state-requirements.html">04 · Data & State</a>
+<a href="05-notifications-reengagement.html">05 · Notifications</a>
+<a href="06-pwa-constraints.html">06 · PWA</a>
+<a href="07-backend-brief.html">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — Core User Flows</h1>
+<p><strong>Doc 3 of the IA/UXD documentation set · Phase 1</strong>
+Status: Draft v1 · 2026-07-02
+Terms per <a href="00-concept-glossary.html">00-concept-glossary.md</a>; routes and gating per <a href="02-site-map-ia.html">02-site-map-ia.md</a>.</p>
+<p>Seven flows. A–D exist in the prototype (documented here with gaps resolved); E–G are new (account layer). Each flow lists its screens, steps, states, and edge cases. Copy shown in <em>italics</em> is directional — final copy must match the established voice (Doc 1 §5).</p>
+<hr />
+<h2>Flow A — First touch: stranger meets stone</h2>
+<p><strong>Trigger:</strong> person scans the QR on a stone (or opens a shared stone URL).
+<strong>Screens:</strong> Landing → Welcome → PE Intro → PE Conversation.
+<strong>Goal:</strong> from curiosity to first exchange with the Emissary in under a minute, zero identity friction.</p>
+<div class="mermaid">flowchart TD
+  QR[&quot;QR scan&quot;] --&gt; L[&quot;Landing · /s/:stoneId&lt;br&gt;stone name · image · traits · 'this is a field test'&quot;]
+  L -- &quot;Talk to the stone&quot; --&gt; FT{first time on this&lt;br&gt;pairing + device?}
+  FT -- yes --&gt; W[&quot;Welcome · /s/:stoneId/welcome&lt;br&gt;previous holder's gift · link to The Gifts chain (M1)&lt;br&gt;PE-journal disclosure (informational)&quot;]
+  W -- &quot;Start a Conversation&quot; --&gt; I[&quot;PE Intro · /s/:stoneId/intro&lt;br&gt;'What am I?' framing · Terms / Fineprint / FAQ (M3)&lt;br&gt;journal notice pre-checked · team-share consent, default OFF&quot;]
+  I -- &quot;Continue&quot; --&gt; C[&quot;PE Conversation · /s/:stoneId/emissary&lt;br&gt;Emissary opens from the previous holder's gift&lt;br&gt;nav fully enabled from here on&quot;]
+  FT -- &quot;no — returning (Flow B)&quot; --&gt; C
+</div>
+<p><strong>States &amp; rules</strong>
+- Nav greyed until Conversation is reached (per prototype).
+- The Emissary's opening message is generated from the previous holder's parting gift — if the stone has never been held (first circulation), a defined "first words" opening is needed. <strong>[gap: first-circulation opening copy]</strong>
+- Consent checkbox state must persist with the pairing, changeable later (where? recommend PE Intro content reachable from PE Journal modal — <strong>[gap: settings surface for consent in Stone Context]</strong>).</p>
+<p><strong>Edge cases</strong>
+| Case | Behavior |
+|---|---|
+| Revisit mid-pairing (same device) | Skip gate → straight to Conversation (Flow B) |
+| Stone currently held by someone else | Bystander view (IA §1 ⚠️ — TBD, recommend Landing without CTA, <em>"This stone is with someone right now."</em>) |
+| Stone URL opened on desktop | Works (PWA is responsive web first); QR flow unaffected |
+| Second device, same holder | MVP: treated as bystander/new — known limitation, note in field-test guide <strong>[accepted risk]</strong> |</p>
+<hr />
+<h2>Flow B — Returning current holder</h2>
+<p><strong>Trigger:</strong> reopening the PWA / re-scanning during an active pairing.
+<strong>Path:</strong> <code>/</code> resolver → active pairing found → PE Conversation, history intact.
+Conversation history restores from device-local storage (Doc 4). No gate, no login. If the holder had signed in previously (Flow F user who took on a new stone), same path — account changes nothing in Stone Context.</p>
+<hr />
+<h2>Flow C — Commons: read, contribute, reply</h2>
+<p><strong>Screens:</strong> The Commons → expanded card (M2) → Contribute.</p>
+<div class="mermaid">flowchart TD
+  T[&quot;Commons tab&quot;] --&gt; F[&quot;The Commons · /s/:stoneId/commons&lt;br&gt;toggle: Stone feed ⇄ Public feed&quot;]
+  F -- &quot;The Gifts pill&quot; --&gt; GC[&quot;The Gifts chain (M1)&quot;]
+  F -- &quot;tap card&quot; --&gt; X[&quot;In-place expansion (M2)&lt;br&gt;full media + text&quot;]
+  X -- &quot;slot unused&quot; --&gt; R[&quot;Leave something in return&lt;br&gt;one-level reply composer&quot;]
+  R --&gt; CL[&quot;posted — slot closed, forever&quot;]
+  F -- &quot;Contribute&quot; --&gt; N[&quot;Contribute · /s/:stoneId/commons/new&lt;br&gt;compose + Add files&lt;br&gt;publish to: Stone and/or Public (at least one)&quot;]
+  N -- &quot;Publish&quot; --&gt; F
+</div>
+<p><strong>Rules</strong>
+- Reply slot: one reply, ever, per card; no threading (workflow notes). The reply renders inside the expanded card, attributed to the stone (<em>"from Pierrot's holder"</em>), not to a named person.
+- Publish-to validation: zero boxes checked → Publish disabled. <strong>[gap: neither prototype nor workflow defines Stone-only vs Public-only vs both rendering differences in feed — Doc 4 defines the model; UI needs a subtle scope marker on cards]</strong>
+- Anonymity: Commons posts carry stone attribution only. No usernames anywhere in Stone Context, even for signed-in users.</p>
+<hr />
+<h2>Flow D — Gift the Stone (handoff) — now hosts the claim moment</h2>
+<p><strong>Screens:</strong> Gift the Stone → <strong>Keep Following (A1, new)</strong> → <strong>Stone Released (A2, new)</strong> → stone resets.
+This is the prototype's <code>Gift → 1-landing.html</code> shortcut expanded into the real sequence. Order matters: <strong>email capture happens before reset</strong>, while the giver still has standing.</p>
+<div class="mermaid">flowchart TD
+  G[&quot;Gift icon&quot;] --&gt; C1[&quot;1 · Compose parting gift · /s/:stoneId/gift&lt;br&gt;'Before it moves on — leave a gift for whoever holds it next.'&quot;]
+  C1 -- &quot;Gift Stone&quot; --&gt; CF{&quot;2 · Confirm&lt;br&gt;'This ends your conversation.&lt;br&gt;Your gift joins the chain.'&quot;}
+  CF -- &quot;Not yet&quot; --&gt; C1
+  CF -- &quot;Gift it&quot; --&gt; PUB[&quot;3 · Gift published — appended to The Gifts chain&quot;]
+  PUB --&gt; KF[&quot;4 · KEEP FOLLOWING (A1) — the account offer&lt;br&gt;'Stone moves on. Want to see where it goes?'&lt;br&gt;kept: chain · stone commons · your archive&quot;]
+  KF -- &quot;5a · email entered&quot; --&gt; ML[&quot;magic link sent&quot;]
+  ML --&gt; REL[&quot;STONE RELEASED (A2)&lt;br&gt;'Check your email when you're curious.'&quot;]
+  KF -- &quot;5b · No thanks — let it go&quot; --&gt; REL
+  REL --&gt; RESET[&quot;6 · Pairing ends server-side · stone resets&lt;br&gt;giver's device clears after grace period (Doc 4)&lt;br&gt;next QR scan → Flow A for the new holder&quot;]
+</div>
+<p><strong>Rules &amp; edge cases</strong>
+| Case | Behavior |
+|---|---|
+| Gift composed but abandoned (✕) | Draft kept device-local; gift not published, pairing continues |
+| Empty gift | Disallow — the chain is the product's spine; require text or media |
+| Email typo / link never clicked | Pairing still ends (gifting is never blocked on auth); claim token stays valid 7 days, attached to the pairing (Doc 4) |
+| Already signed in when gifting | Skip A1; A2 confirms <em>"You'll keep following <Stone> — it's in your stones."</em> |
+| Wants account but hasn't gifted yet | Not offered in MVP (product decision: post-gift only); Landing's "Held a stone before?" is for returning account holders, not first-claim |</p>
+<blockquote>
+<p><strong>F8 note:</strong> if My Journal ships, step 4 also mentions <em>"your journal entries stay yours."</em> If it doesn't, the claim offer rests on the chain + commons + archive alone.</p>
+</blockquote>
+<hr />
+<h2>Flow E — Claim: magic link → account (new)</h2>
+<p><strong>Trigger:</strong> tapping the magic link from Flow D step 5a (or Flow G's sign-in).
+<strong>Screens:</strong> email client → <code>/auth/verify</code> → My Stones.</p>
+<div class="mermaid">flowchart TD
+  EM[&quot;email: 'Keep following your stone'&quot;] -- &quot;See where it goes&quot; --&gt; V[&quot;/auth/verify?token=…&quot;]
+  V -- &quot;token valid&quot; --&gt; ACC[&quot;account created — or matched by email&lt;br&gt;pairing attached · long-lived session set (Doc 6)&quot;]
+  V -- &quot;expired (7 days)&quot; --&gt; RX[&quot;re-request screen&lt;br&gt;enter email again → fresh link&quot;]
+  ACC --&gt; MS[&quot;My Stones · /me&lt;br&gt;released stone pinned: 'released today'&lt;br&gt;afterlife one tap away&quot;]
+  MS -.-&gt;|&quot;deferred one step — don't stack asks&quot;| NG[&quot;notification prompt (Flow G)&quot;]
+</div>
+<p><strong>Rules</strong>
+- Token single-use, 7-day expiry; expired → friendly re-request screen (enter email again, new link).
+- If the email already has an account, the new pairing simply attaches — same flow, no "log in vs sign up" fork. <strong>Passwordless means there is only one auth flow in the whole product.</strong>
+- Opening the link in a plain browser while the PWA is installed is the known hard case — behavior defined in Doc 6 (must be resolved before build).</p>
+<hr />
+<h2>Flow F — Return visit: the afterlife (new)</h2>
+<p><strong>Trigger:</strong> notification email deep link, or opening the PWA with no active pairing.
+<strong>Screens:</strong> My Stones → Stone afterlife → My archive.</p>
+<div class="mermaid">flowchart TD
+  IN[&quot;notification deep link — or PWA open, no active pairing&quot;] --&gt; MS[&quot;My Stones · /me&lt;br&gt;card per pairing: image · name · 'held Mar–Jun 2026' · activity dot&quot;]
+  MS --&gt; AF[&quot;Afterlife view · /me/pairings/:id&lt;br&gt;Gifts chain — new since your tenure&lt;br&gt;Stone commons — read-only (D6) · provenance&quot;]
+  AF --&gt; AR[&quot;My archive · /me/pairings/:id/archive · private&lt;br&gt;my parting gift · my commons contributions&lt;br&gt;my journal entries (F8) · PE journal from my tenure&quot;]
+</div>
+<p><strong>Rules</strong>
+- Read-only afterlife per IA D6: past holders can look, not post. Revisit post-field-test.
+- Privacy boundary (hard): a past holder <strong>never</strong> sees the current holder's PE conversation or the PE journal of any tenure but their own.
+- Activity dot = unseen afterlife events (new gift, new stone-commons post); cleared on view. This is the retention loop's in-app half; email is the other half (Flow G).</p>
+<hr />
+<h2>Flow G — Notifications &amp; re-engagement (new)</h2>
+<p><strong>Opt-in moment:</strong> first visit to My Stones after claim (Flow E), one screen, defaults conservative.</p>
+<pre><code>&quot;Want to hear when something happens?&quot;
+  ☑ A new holder leaves a gift            (email)
+  ☑ Someone replies to something you left  (email)
+  ☐ Stone commons activity digest          (email, weekly)
+  Push notifications: offered only after ≥1 email engagement (Doc 5 rationale)
+  [Save] / [Not now]  → never ask again unprompted; editable in /me/settings
+</code></pre>
+<p>Full trigger matrix, channel strategy, and copy in Doc 5. Principles fixed here:
+1. <strong>Event-driven, not engagement-bait</strong> — notify on chain/reply events, never "come back!" nudges. Matches the product's non-coercive voice.
+2. <strong>Email first, push later</strong> — magic-link users are email-verified by definition; PWA push is fragile (iOS requires A2HS install; Doc 6).
+3. Every email deep-links to the exact afterlife view it describes.</p>
+<hr />
+<h2>Flow-to-screen build coverage</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Flow</th>
+<th>Built</th>
+<th>Missing/new screens needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A First touch</td>
+<td>1, 2, 3, 4</td>
+<td>M1 Gifts chain, M3 Terms/FAQ, first-circulation opening</td>
+</tr>
+<tr>
+<td>B Return (holding)</td>
+<td>4</td>
+<td>—</td>
+</tr>
+<tr>
+<td>C Commons</td>
+<td>5, 5b</td>
+<td>M2 expanded card + reply composer</td>
+</tr>
+<tr>
+<td>D Gift + claim</td>
+<td>7</td>
+<td>A1 Keep Following, A2 Stone Released, confirm dialog</td>
+</tr>
+<tr>
+<td>E Claim/verify</td>
+<td>—</td>
+<td>A8 sign-in, A9 link-sent, verify screen, expired-token screen</td>
+</tr>
+<tr>
+<td>F Afterlife</td>
+<td>—</td>
+<td>A4 My Stones, A5 afterlife, A6 archive</td>
+</tr>
+<tr>
+<td>G Notifications</td>
+<td>—</td>
+<td>A7 settings + opt-in screen</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Suggested build order</strong> (each slice independently shippable): A+B (exists, wire up) → C (M2 completes the social loop) → D through step 3 (handoff works without accounts) → D4–5 + E (claim) → F → G.</p>
+</main>
+
+<div class="pager">
+<a href="02-site-map-ia.html">&larr; 02 · Site Map / IA</a><span class="spacer"></span><a href="04-data-state-requirements.html">04 · Data & State &rarr;</a>
+</div>
+
+<script src="vendor/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "base",
+    themeVariables: {
+      primaryColor: "#F9E9EA",
+      primaryBorderColor: "#A31621",
+      primaryTextColor: "#2B2222",
+      secondaryColor: "#FAF3E3",
+      tertiaryColor: "#FFFFFF",
+      lineColor: "#7C0F18",
+      edgeLabelBackground: "#F1EDEA",
+      fontFamily: "Avenir Next, Segoe UI, Helvetica Neue, Arial, sans-serif",
+      fontSize: "12.5px"
+    },
+    flowchart: { curve: "basis", htmlLabels: true }
+  });
+</script>
+
+</body>
+</html>

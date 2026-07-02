@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sri Lanka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #3a3733;
+      --amber: #c8862a;
+      --white: #f0ede8;
+      --white-dim: rgba(240, 237, 232, 1.5);
+      --white-faint: rgba(240, 237, 232, 1.5);
+      --amber-rule: rgba(200, 134, 42, 0.5);
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      font-family: 'IBM Plex Mono', monospace;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 64px 32px 88px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Stone image ── */
+    .stone-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0px;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    .stone-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ── Identity ── */
+    .stone-identity {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 44px;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    /* ── Question ── */
+    .question {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 2.1rem;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeIn 0.9s ease forwards;
+      animation-delay: 0.45s;
+    }
+
+    /* ── Frame ── */
+    .frame-section {
+      width: 100%;
+      margin-bottom: 44px;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 0.6s;
+    }
+
+    .frame-list {
+      list-style: none;
+      margin-bottom: 22px;
+    }
+
+    .frame-list li {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      font-size: 0.85rem;
+      line-height: 1.85;
+      letter-spacing: 0.03em;
+      color: var(--white-dim);
+      padding-left: 1.3em;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .frame-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      font-size: 1.3rem;
+      line-height: 1;
+      color: var(--amber);
+    }
+
+    .frame-invite {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      font-size: 0.95rem;
+      line-height: 1.85;
+      letter-spacing: 0.03em;
+      color: var(--amber);
+      text-align: center;
+    }
+
+    .stone-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 2.4rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 7px;
+    }
+
+    .stone-place {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      font-size: 0.95rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+
+    /* ── CTA block: rule, name, traits, button, rule ── */
+    .cta-block {
+      width: 100%;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 0.8s;
+    }
+
+    .cta-rule-top {
+      width: 100%;
+      height: 1px;
+      background: var(--amber-rule);
+      margin-bottom: 32px;
+    }
+
+    .cta-stone-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 1.5rem;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .stone-traits {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .trait {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      color: var(--white-dim);
+      max-width: 360px;
+    }
+
+    .trait-sep {
+      color: var(--amber);
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .cta-rule-bottom {
+      width: 100%;
+      height: 1px;
+      background: var(--amber-rule);
+      margin-top: 32px;
+    }
+
+    /* ── CTA ── */
+    .cta-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 0.9s;
+    }
+
+    .cta {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #1a1816;
+      background: var(--amber);
+      text-decoration: none;
+      padding: 15px 36px;
+      transition: opacity 0.2s ease;
+    }
+
+    .cta:hover { opacity: 0.82; }
+    .cta:focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 3px;
+    }
+
+    /* ── Below fold ── */
+    .below-fold {
+      width: 100%;
+      margin-top: 56px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 1.05s;
+    }
+
+    .below-fold-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 1.8rem;
+      letter-spacing: 0.04em;
+      text-align: center;
+      color: var(--amber);
+      margin-bottom: 24px;
+    }
+
+    .below-fold-list {
+      list-style: none;
+    }
+
+    .below-fold-list li {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      font-size: 0.8rem;
+      line-height: 1.85;
+      letter-spacing: 0.03em;
+      color: var(--white-faint);
+      padding-left: 1.3em;
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .below-fold-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      font-size: 1.1rem;
+      line-height: 1;
+      color: var(--white-faint);
+    }
+
+    .below-fold-list li:last-child { margin-bottom: 0; }
+
+    /* ── Group image ── */
+    .group-section {
+      width: 100%;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 1.2s;
+    }
+
+    .group-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--white-faint);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .group-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.65;
+    }
+
+    /* ── Footer ── */
+    .mark {
+      margin-top: 44px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: var(--white-faint);
+      text-transform: uppercase;
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 1.35s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .question, .stone-wrap, .frame-section, .stone-identity,
+      .cta-block, .below-fold, .group-section, .mark {
+        animation: none;
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .stone-name  { font-size: 2rem; }
+      .question    { font-size: 1.6rem; }
+      .page        { padding: 48px 22px 64px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+
+    <!-- Identity -->
+    <div class="stone-identity">
+      <h1 class="stone-name">Koozhankal</h1>
+      <p class="stone-place">Sri Lanka, South Asia</p>
+    </div>
+	  
+    <!-- Stone image — replace src with individual stone PNG, stones/[id].png -->
+    <div class="stone-wrap">
+      <img
+        class="stone-image"
+        src="assets/sri-lanka.png"
+        alt="a river stone imprinted with a map of Sri Lanka"
+      >
+    </div>	  
+
+    <p class="question">what is this?</p>
+
+    <!-- Frame -->
+ 
+    <!-- CTA block: rule, name, traits, button, rule -->
+    <div class="cta-block">
+      <div class="cta-rule-top"></div>
+
+      <p class="cta-stone-name">Koozhankal</p>
+
+      <div class="stone-traits">
+        <span class="trait">Island, post-war</span>
+        <span class="trait-sep">·</span>
+        <span class="trait">Drawn to people who have come through something and don't need to explain it</span>
+        <span class="trait-sep">·</span>
+        <span class="trait">Doesn't ask for the story. Sits with what's carried.</span>
+      </div>
+   <div class="frame-section">
+      <p class="frame-invite">This is a field test.</p>
+      <p class="frame-invite">You're invited into the conversation.</p>
+    </div>
+
+      <div class="cta-wrap">
+        <a
+          class="cta"
+          href="2-welcome-image.html"
+        >Talk to the stone</a>
+      </div>
+
+      <div class="cta-rule-bottom"></div>
+    </div>
+
+    <!-- Below fold -->
+    <div class="below-fold">
+      <p class="below-fold-label">What this is</p>
+      <ul class="below-fold-list">
+        <li>Twenty-four stones are circulating in an early test. Some are real, some are virtual. Each one explores its new context through its own conversations.</li>
+        <li>It journals about its experiences in the world, what it notices and observes. Your conversations remain between you and the stone.</li>
+        <li>A shared space holds what others have left behind. Some of it you can see now. The rest opens once you've left something of your own.</li>
+        <li>Your conversations are private and remain on your device and browser.</li>
+      </ul>
+    </div>
+   <div class="frame-section">
+      <ul class="frame-list">
+        <li>A common stone, transformed into a unique personal companion – with a voice.</li>
+        <li>A curious object, it asks what is this?</li>
+        <li>It likes to learn and it seeks out good conversations.</li>
+        <li>It accumulates memory, place, and provenance as it moves through human hands.</li>
+      </ul>
+    </div>
+
+      <div class="cta-wrap">
+        <a
+          class="cta"
+          href="2-welcome-image.html"
+        >Talk to the stone</a>
+      </div>
+	  
+
+    <p class="mark">Stonemaps · Field Test · 2026</p>
+
+  </main>
+</body>
+</html>

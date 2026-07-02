@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backend Brief: Requirements & Build-vs-Reuse · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html">Library</a>
+<a href="00-concept-glossary.html">00 · Glossary</a>
+<a href="01-screen-inventory.html">01 · Inventory</a>
+<a href="02-site-map-ia.html">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html">03 · Flows</a>
+<a href="04-data-state-requirements.html">04 · Data & State</a>
+<a href="05-notifications-reengagement.html">05 · Notifications</a>
+<a href="06-pwa-constraints.html">06 · PWA</a>
+<a href="07-backend-brief.html" aria-current="page">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — Backend Brief: Requirements &amp; Build-vs-Reuse</h1>
+<p><strong>Doc 7 of the IA/UXD documentation set</strong>
+Status: Draft v1 · 2026-07-02
+Direction (2026-07-02): the existing stone-maps backend is <strong>an option, not a given</strong>. This doc states what any backend must provide (from Docs 2–6), then evaluates the two paths. The IA/UX docs are deliberately backend-agnostic — nothing upstream changes whichever way this goes.</p>
+<hr />
+<h2>1. What any backend must provide</h2>
+<p>Derived from the data model (Doc 4), flows (Doc 3), and platform constraints (Doc 6). This is the checklist to score any candidate against.</p>
+<p><strong>Core domain</strong>
+- [ ] Stones with identity (name, place, traits, media) and state (IDLE/HELD), opaque permanent ids for QR URLs
+- [ ] Pairings as first-class records (person_ref ↔ stone, start/end, ordinal, consent flags) — content hangs off pairings, not accounts
+- [ ] Anonymous person_ref support: content creation with <strong>no account</strong>, claimable later without rewriting content
+- [ ] Gifts as an ordered per-stone chain (one per pairing)
+- [ ] Commons posts with dual scope flags {stone, public} + one-time reply slot (OPEN→CLOSED, terminal)
+- [ ] PE journal entries, pairing-scoped (rung 2), opt-out per pairing
+- [ ] My Journal entries with additive share scopes {stone, commons, team} (F8 module)
+- [ ] Media upload (image/audio/video), size caps, client-downscale-friendly</p>
+<p><strong>Emissary</strong>
+- [ ] LLM conversation endpoint, per-stone persona (traits → system prompt), opening message generated from previous holder's gift
+- [ ] Server generates PE journal entries post-conversation (anonymized summary) unless opted out
+- [ ] <strong>Transcript never persisted server-side</strong> unless team-share consent ON (rung 1 rule R1) — this is an architectural property, not a feature</p>
+<p><strong>Auth &amp; accounts (Phase 2)</strong>
+- [ ] Passwordless magic link: token issue (claim + sign-in variants), single-use, 7-day expiry, verify endpoint
+- [ ] Server-set HttpOnly sliding sessions ≥90 days (P3)
+- [ ] Claim = attach account_id to pairing (Doc 4 §5); same flow for new and existing emails
+- [ ] Account deletion = unlink pairings to anonymous, erase email/prefs</p>
+<p><strong>Notifications (Doc 5)</strong>
+- [ ] Event emission on: gift published, reply posted, pairing ended
+- [ ] Email sender with <strong>transactional vs notification classes separated</strong> (launch blocker if missed)
+- [ ] Per-trigger prefs, one-tap unsubscribe (no login), daily coalescing cap
+- [ ] SEEN_CURSOR per pairing (activity dot)</p>
+<p><strong>Operational (field test)</strong>
+- [ ] Provision 24 stones, campaign/team grouping, printable QR export
+- [ ] Team review surface for consented content (rung 3)
+- [ ] Takedown tooling for rung 4–5 content
+- [ ] Metrics: claim rate, email→deep-link rate, return visits (Doc 5 §5)</p>
+<hr />
+<h2>2. Option A — extend the existing stone-maps backend</h2>
+<p><strong>What it already has</strong> (verified via its MCP tool surface, 2026-07-02; DB was down so schema-level detail is inferred, marked ◐):</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stones, details, per-user ownership</td>
+<td>✓ (<code>list_stones</code>, <code>get_stone_details</code>)</td>
+</tr>
+<tr>
+<td>User↔stone pairing concept</td>
+<td>✓ <code>get_self_pairs</code> — closest existing analog to Pairing ◐ (semantics unverified)</td>
+</tr>
+<tr>
+<td>Emissary conversations</td>
+<td>✓ (<code>start_conversation</code> w/ geo, <code>list_conversations</code>)</td>
+</tr>
+<tr>
+<td>Journal posts w/ visibility <code>private/public/team</code></td>
+<td>✓ (<code>create_post</code>, <code>get_journal_posts</code>) — but scopes are single-enum, <strong>not</strong> the additive {stone, commons, team} sets the UX needs</td>
+</tr>
+<tr>
+<td>Geo/map posts, nearby, search</td>
+<td>✓ — beyond current UX scope (provenance later)</td>
+</tr>
+<tr>
+<td>Teams / campaigns (operator side)</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Personal API tokens</td>
+<td>✓ — developer auth, <strong>not</strong> end-user magic links</td>
+</tr>
+<tr>
+<td>Anonymous-first content + later claim</td>
+<td>✗ appears account-centric throughout ◐</td>
+</tr>
+<tr>
+<td>Gifts chain, reply slots, dual-scope posts</td>
+<td>✗ not visible in API surface</td>
+</tr>
+<tr>
+<td>Magic-link auth, notification classes, prefs</td>
+<td>✗ not visible</td>
+</tr>
+<tr>
+<td>Health</td>
+<td>⚠️ DB down at time of writing (Redis, R2 fine)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Assessment.</strong> Roughly the right <em>domain</em> (stones, pairings, conversations, scoped posts, operator layer already exist) but the wrong <em>identity assumption</em>: it looks account-first, and the MVP's defining property is anonymous-first-claim-later. Retrofitting that touches every content path. The post-visibility model (single enum vs additive scope sets) is a second structural mismatch.</p>
+<p><strong>Cost shape:</strong> low on domain CRUD (exists), high on auth rework + scope model migration + the gift-chain/reply-slot features that don't exist anyway. Plus: current instability needs diagnosis before any bet on it.</p>
+<h2>3. Option B — fresh build to this spec</h2>
+<p>Greenfield service implementing §1 directly. The domain is small (7 entities, 3 state machines) and the docs are effectively the spec. Modern stack of team's choice; the existing backend's R2 media storage and any Emissary prompt work are portable regardless.</p>
+<p><strong>Cost shape:</strong> flat and predictable — everything is built, nothing is fought. The operator layer (provisioning, review, takedown) is the hidden cost people forget; the existing backend already has some of it.</p>
+<h2>4. Recommendation</h2>
+<p><strong>Decide on one question: how account-first is the existing data model really?</strong> The tool surface can't answer it (◐ marks); one hour with the actual schema when the DB is back up can.</p>
+<ul>
+<li>If pairings/posts can carry an anonymous person_ref with a nullable account link → <strong>Option A</strong>, extend: add magic-link auth, additive scopes, gifts/replies. You inherit the operator layer and geo for free.</li>
+<li>If identity is woven through content tables → <strong>Option B</strong>, fresh build against this doc, keeping R2 + operator concepts as reference. Retrofitting identity assumptions is the classic underestimated rewrite.</li>
+</ul>
+<p>Either way, <strong>the contract is §1</strong> — score the schema against the checklist, not against sunk cost.</p>
+<h2>5. Decision log</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Decision</th>
+<th>By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-02</td>
+<td>Existing backend demoted from assumption to option</td>
+<td>product</td>
+</tr>
+<tr>
+<td>—</td>
+<td>A vs B: pending schema inspection (DB currently down)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+</main>
+
+<div class="pager">
+<a href="06-pwa-constraints.html">&larr; 06 · PWA</a><span class="spacer"></span><a href="08-holder-journey-map.html">08 · Journey Map &rarr;</a>
+</div>
+
+</body>
+</html>

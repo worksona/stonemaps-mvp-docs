@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept Glossary · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html">Library</a>
+<a href="00-concept-glossary.html" aria-current="page">00 · Glossary</a>
+<a href="01-screen-inventory.html">01 · Inventory</a>
+<a href="02-site-map-ia.html">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html">03 · Flows</a>
+<a href="04-data-state-requirements.html">04 · Data & State</a>
+<a href="05-notifications-reengagement.html">05 · Notifications</a>
+<a href="06-pwa-constraints.html">06 · PWA</a>
+<a href="07-backend-brief.html">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — Concept Glossary</h1>
+<p><strong>Doc 0 of the IA/UXD documentation set · Phase 0</strong>
+Status: Draft v1 · 2026-07-02
+Source of truth: the 10 prototype screens in this folder + PE-FT-workflow-V5.jpg. Backend-agnostic — terms borrowed from the existing stone-maps API are marked <em>(prior art)</em> and are reference patterns, not dependencies.</p>
+<p>Every other document in this set uses these terms exactly as defined here. If a term needs to change, change it here first.</p>
+<hr />
+<h2>Core entities</h2>
+<h3>Stone</h3>
+<p>A physical (or virtual) object circulating among people. Carries a <strong>name</strong>, a <strong>place of origin</strong>, and a <strong>traits list</strong> (personality description, e.g. "Unhurried. Doesn't push. Has seen worse."). Twenty-four stones circulate in the field test; "some are real, some are virtual" (landing copy). A stone accumulates memory, place, and provenance as it moves through hands.</p>
+<blockquote>
+<p>⚠️ Open question: the landing screen names the stone <strong>Koozhankal</strong> (Sri Lanka) while the conversation screen names it <strong>Pierrot</strong>. Either these are two different stones used across prototype screens, or the name drifted between sessions. Every stone-scoped screen must render the <em>same</em> stone identity; docs assume one stone per journey.</p>
+</blockquote>
+<h3>Planetary Emissary (PE / Emissary)</h3>
+<p>The stone's conversational voice — the AI persona the holder talks to. Self-describes as unformed: "I'm not sure yet. A talking stone? A map, a voice, something else?" The Emissary opens each new holder's conversation by referencing the previous holder's parting message. The Emissary is per-stone: each stone has one Emissary identity, renameable by the holder ("Rename / Edit" on the conversation screen).</p>
+<h3>Holder</h3>
+<p>The person currently in possession of a stone. Holdership is exclusive and sequential — one holder at a time per stone, forming a chain. In the current prototype a holder is <strong>anonymous</strong> (no account); identity is implicit in device + browser.</p>
+<h3>Holder Chain / Provenance</h3>
+<p>The ordered sequence of holders a stone has passed through. Surfaced to users through Gifts (each holder leaves one) and Emissary references to "the last person who held me." Not yet surfaced as an explicit provenance view.</p>
+<h3>Account (new — Phase 2 concept)</h3>
+<p>A durable, global identity for a person across all stones they have ever held. Established via <strong>passwordless magic link / OTP</strong> (decided 2026-07-02). Not required to begin using the app; offered <strong>after gifting a stone</strong> as the way to keep following it. An account aggregates: pairing history, preserved private archives, notification preferences.</p>
+<h3>Pairing (prior art: <code>self_pairs</code>)</h3>
+<p>The relationship between a person and a stone, with a start and (after gifting) an end. The existing stone-maps backend models this as "self-pairs"; whatever backend is chosen, <em>pairing</em> is the canonical term for the user↔stone relationship record. A person's set of pairings is their <strong>collection</strong>.</p>
+<h3>Gift</h3>
+<p>A parting artifact one holder leaves for the next — text plus optional rich media (photo, audio, video). Created on the <strong>Gift the Stone</strong> screen. The chain of gifts is <strong>The Gifts</strong>: "a linear chain of posts by sequential holders" (workflow notes). The next holder sees the latest gift on <strong>Welcome</strong> and can "view all of them."</p>
+<h3>Gifting / Handoff</h3>
+<p>The act of passing the stone to a new person. In the current prototype this <strong>exits and resets conversation history</strong> (Gift the Stone screen). With accounts, the reset applies to the <em>device/next holder's view</em>, not to the giver's preserved archive (see Data &amp; State Requirements, Doc 3).</p>
+<hr />
+<h2>Spaces &amp; content</h2>
+<h3>PE Conversation</h3>
+<p>The private chat between the current holder and the Emissary. Marked <em>(PRIVATE)</em> in the workflow. Landing copy commits: "Your conversations are private and remain on your device and browser." One conversation context per holdership; reset at handoff.</p>
+<h3>The Commons</h3>
+<p>A shared feed of posts contributed by stoneholders. Two-position filter toggle: <strong>Stone</strong> (posts scoped to this stone's holders) / <strong>Public</strong> (ambient feed, all stoneholders). Cards expand in place; each card offers a one-time <strong>"Leave something in return"</strong> reply slot — one-level reply from the stone's holder, slot closes once used, no threading (workflow notes).</p>
+<h3>Contribute (to the Commons)</h3>
+<p>The compose screen for a Commons post. Publish targets are checkboxes, not either/or: <strong>Stone</strong> ("Visible to this stone's holders, always") and/or <strong>Public</strong> ("Enters the ambient feed, visible to all stoneholders").</p>
+<h3>PE Journal</h3>
+<p>The <strong>stone's own journal</strong> — anonymized entries the Emissary writes after each conversation, "summarizing what it noticed." Scoped to the current holder's sessions; visible to the current holder; holder can <strong>opt out</strong> per stone (checkbox on the PE Journal screen, also disclosed on Welcome and PE Intro). Workflow marks it "(current holder)" — entries about <em>you</em> are yours to see.</p>
+<h3>My Journal</h3>
+<p>The <strong>holder's own journal</strong> — entries the person writes. Private by default, with per-entry share scopes: <strong>The Stone</strong> (this stone's holders, always), <strong>The Commons</strong> (ambient feed), <strong>Project Team</strong> (shares with Stonemaps), <strong>PE</strong> (coming soon — would feed the entry to the Emissary).</p>
+<blockquote>
+<p>⚠️ The prototype itself flags this: "My Journal scope TBD. Active for evaluation." My Journal does not appear in the workflow diagram — it is an addition made in the HTML prototypes after V5 of the diagram.</p>
+</blockquote>
+<h3>Journal (nav tab)</h3>
+<p>The nav tab labeled "Journal" opens <strong>My Journal — New Entry</strong> (6b). PE Journal is reached from the conversation screen ("View PE Journal"). Two different journals share one word in the UI — the glossary distinction (PE Journal vs My Journal) must be kept everywhere in documentation to avoid confusion.</p>
+<hr />
+<h2>Field-test / operational terms</h2>
+<h3>Field Test</h3>
+<p>The current release phase: 24 stones circulating with invited participants. Landing frames it explicitly: "This is a field test. You're invited into the conversation."</p>
+<h3>Project Team</h3>
+<p>Stonemaps, the operating organization. Appears to users in two consent surfaces: the PE Intro checkbox ("Share your PE conversations with the project team to help us improve") and the My Journal "Project Team" share scope.</p>
+<h3>Pre-sale</h3>
+<p>External marketing surface (<code>stonemaps.org/exec-sum/es-presale.html</code>), reachable from the persistent nav (right icon). Out of scope for app IA except as an exit link.</p>
+<h3>Campaign / Team <em>(prior art)</em></h3>
+<p>Operator-side grouping concepts in the existing backend (stones provisioned under campaigns run by teams). No user-facing surface in the prototype. Retained in the glossary because the "Stone/Public" and "Project Team" visibility scopes will need an operator-side counterpart in any backend. Not a user-facing term.</p>
+<hr />
+<h2>Interaction &amp; state vocabulary</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>First-time gate</strong></td>
+<td>Welcome → PE Intro sequence shown only on a holder's first visit ("FIRST TIME" branch in workflow); returning holders go straight to PE Conversation.</td>
+</tr>
+<tr>
+<td><strong>Greyed nav</strong></td>
+<td>Pre-conversation state: all tabs + Gift icon disabled until the first conversation begins (Welcome and PE Intro screens show this).</td>
+</tr>
+<tr>
+<td><strong>Reply slot</strong></td>
+<td>The one-time, one-level "leave something in return" response attached to a Commons card.</td>
+</tr>
+<tr>
+<td><strong>Opt-out</strong></td>
+<td>Holder disabling PE Journal entries for a stone. Per-stone, reversible.</td>
+</tr>
+<tr>
+<td><strong>Claim</strong> (new)</td>
+<td>The moment an anonymous holder attaches an account (magic link) to their pairing — expected at/after gifting. Defined fully in Doc 2 (Flows).</td>
+</tr>
+<tr>
+<td><strong>Reset</strong></td>
+<td>Clearing conversation history at handoff so the next holder starts fresh.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>Naming decisions to make (carried forward)</h2>
+<ol>
+<li><strong>Koozhankal vs Pierrot</strong> — one stone journey per doc; confirm intended stone identity model (stone name fixed vs holder-renameable — "Rename / Edit" suggests the <em>Emissary</em> name is holder-editable, which interacts with stone identity).</li>
+<li><strong>"Journal" tab label</strong> ambiguity (My Journal vs PE Journal) — recommend distinct labels or a merged journal hub screen.</li>
+<li><strong>"Holder" vs "Stoneholder"</strong> — copy uses both; recommend <strong>holder</strong> in docs, <strong>stoneholder</strong> only in user-facing copy where it already appears.</li>
+<li><strong>Account naming in-product</strong> — "account" may be too transactional for the product's tone; candidates: <em>keeper profile</em>, <em>your thread</em>, <em>holder record</em>. Decide in Phase 2.</li>
+</ol>
+</main>
+
+<div class="pager">
+<a href="index.html">&larr; Library</a><span class="spacer"></span><a href="01-screen-inventory.html">01 · Inventory &rarr;</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Local Netlify folder
+.netlify
+
+# OS / local tooling
+.DS_Store
+.claude/
+
+# Raw browser-export scratch files, superseded by the click-through prototype
+resources/
+
+# Unrelated stray files found in this folder — not part of Stonemaps
+6bb0bf87455009.5db8ae1d9cdd4.webp
+ee8b6f87455009.5db8ae1d9d5e4.webp
+amazon_context_map_v1_1009182.pdf
+customer_journey_map-min-768x665.png
+hubspot-cjm-min-1.png
+interactive-planning-46b72560228cf92ec5ba2aad24020fb0.jpg
+pasted-image-0.webp
+s12913-021-06934-y.pdf
+
+# Stray Finder duplicate, unlinked
+docs/08-holder-journey-map copy.html

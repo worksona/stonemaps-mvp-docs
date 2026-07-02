@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data & State Requirements · Stonemaps Docs</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .docnav{
+    max-width:900px;margin:18px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .docnav a{
+    font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:4px 11px;
+  }
+  .docnav a:hover{color:var(--red);border-color:var(--red);}
+  .docnav a[aria-current="page"]{background:var(--red);border-color:var(--red);color:#fff;}
+
+  main{
+    max-width:900px;margin:18px auto 40px;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;
+    box-shadow:0 2px 10px rgba(43,34,34,.09);
+    padding:44px 52px 52px;
+  }
+  main h1{
+    font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--red);line-height:1.15;margin-bottom:14px;text-wrap:balance;
+  }
+  main h2{
+    font-family:var(--cond);font-weight:700;font-size:21px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--red);margin:34px 0 12px;
+    padding-top:18px;border-top:1px solid var(--rule);
+  }
+  main h3{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink);margin:22px 0 8px;
+  }
+  main p{font-size:15px;line-height:1.65;margin-bottom:12px;max-width:70ch;}
+  main li{font-size:14.5px;line-height:1.6;margin-bottom:5px;}
+  main ul,main ol{padding-left:24px;margin-bottom:14px;}
+  main a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red-wash);}
+  main a:hover{border-bottom-color:var(--red);}
+  main strong{font-weight:650;}
+  main blockquote{
+    background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;
+    padding:12px 16px;margin:14px 0;color:#5d4f2a;
+  }
+  main blockquote p{font-size:13.5px;margin-bottom:6px;}
+  main blockquote p:last-child{margin-bottom:0;}
+  main code{
+    font-family:var(--mono);font-size:.85em;background:var(--red-wash);
+    color:var(--red-dark);border-radius:0;padding:1px 5px;
+  }
+  main pre{
+    background:#2B2222;color:#F1EDEA;border-radius:0;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:12.5px;line-height:1.55;
+  }
+  main pre code{background:none;color:inherit;padding:0;font-size:inherit;}
+  .mermaid{
+    background:#FAF8F6;border:1px solid var(--rule);border-radius:0;
+    padding:18px 12px;margin:14px 0;overflow-x:auto;
+    display:flex;justify-content:center;
+  }
+  .mermaid svg{max-width:100%;height:auto;}
+  .mermaid svg rect{rx:0!important;ry:0!important;}
+  .tablewrap{overflow-x:auto;margin:14px 0;}
+  main table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+  main th{
+    text-align:left;font-family:var(--cond);font-weight:700;font-size:12px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--red-dark);
+    background:var(--red-wash);padding:8px 10px;border:1px solid var(--rule);
+  }
+  main td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;}
+  main tr:nth-child(even) td{background:#FAF8F6;}
+  main hr{border:none;border-top:1px solid var(--rule);margin:26px 0;}
+  main em{font-family:var(--serif);}
+
+  .pager{
+    max-width:900px;margin:0 auto 44px;padding:0 24px;
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .pager a{
+    font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--red);text-decoration:none;background:var(--card);
+    border:1px solid var(--rule);border-radius:0;padding:10px 16px;
+  }
+  .pager a:hover{border-color:var(--red);}
+  .pager .spacer{flex:1}
+  @media (max-width:700px){
+    main{padding:28px 20px 36px;margin:14px 12px 28px;}
+    .docnav{padding:0 12px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="../index.html">Stonemaps · Field-Test Docs</a>
+  <a href="../index.html">Home</a>
+  <a href="08-holder-journey-map.html">Journey Map</a>
+  <a href="../1-landing.html">Click-through</a>
+  <a href="../PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="../downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<div class="docnav">
+<a href="index.html">Library</a>
+<a href="00-concept-glossary.html">00 · Glossary</a>
+<a href="01-screen-inventory.html">01 · Inventory</a>
+<a href="02-site-map-ia.html">02 · Site Map / IA</a>
+<a href="03-core-user-flows.html">03 · Flows</a>
+<a href="04-data-state-requirements.html" aria-current="page">04 · Data & State</a>
+<a href="05-notifications-reengagement.html">05 · Notifications</a>
+<a href="06-pwa-constraints.html">06 · PWA</a>
+<a href="07-backend-brief.html">07 · Backend</a>
+<a href="08-holder-journey-map.html">08 · Journey Map</a>
+</div>
+
+<main>
+<h1>Stonemaps — Data &amp; State Requirements</h1>
+<p><strong>Doc 4 of the IA/UXD documentation set · Phase 3 (pulled forward)</strong>
+Status: Draft v1 · 2026-07-02
+Backend-agnostic: this describes what data must exist, where it lives, and who can see it — not schemas. The build-vs-reuse decision (Doc 7) implements this; it must not reshape it.</p>
+<hr />
+<h2>1. The privacy ladder</h2>
+<p>Every piece of content in the product sits on exactly one rung. This is the single most important table in the doc set — the copy has already made these promises to users.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Rung</th>
+<th>Content</th>
+<th>Lives</th>
+<th>Visible to</th>
+<th>Survives handoff?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 · Device-private</td>
+<td>PE Conversation transcript</td>
+<td><strong>device only</strong> (local storage)</td>
+<td>current holder</td>
+<td>No — never uploaded; cleared post-gift</td>
+</tr>
+<tr>
+<td>2 · Tenure-private</td>
+<td>PE Journal entries (a tenure); My Journal entries (default)</td>
+<td>server, pairing-scoped</td>
+<td>that tenure's holder only</td>
+<td>Yes → claimed holder's archive only</td>
+</tr>
+<tr>
+<td>3 · Consented-to-team</td>
+<td>Conversations w/ share-consent ON; journal entries shared "Project Team"</td>
+<td>server</td>
+<td>holder + project team</td>
+<td>Per consent</td>
+</tr>
+<tr>
+<td>4 · Stone-scoped</td>
+<td>Gifts chain; Commons posts marked "Stone"; journal entries shared "The Stone"</td>
+<td>server, stone-scoped</td>
+<td>all holders of that stone (current + past)</td>
+<td>Yes — this <em>is</em> the stone's memory</td>
+</tr>
+<tr>
+<td>5 · Public</td>
+<td>Commons posts marked "Public"</td>
+<td>server</td>
+<td>all stoneholders</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Hard rules derived from copy:</strong>
+- R1. The conversation transcript never leaves the device unless the PE-Intro consent box is checked — and even then what's shared is defined as the transcript copy to the team, <strong>not</strong> a change of rung for the live conversation.
+- R2. PE Journal entries are <em>about</em> a holder; they belong to that holder's tenure. A new holder never sees a previous tenure's PE Journal. Opt-out stops generation, per stone, per tenure.
+- R3. Anonymity in shared spaces: rungs 4–5 content is attributed to the <strong>stone/holder-position</strong> (<em>"Pierrot's third holder"</em> at most), never to an account identity. Accounts are private infrastructure, not social identity.</p>
+<hr />
+<h2>2. Entities (conceptual model)</h2>
+<pre><code>STONE ──1:1── EMISSARY (persona: name*, traits, voice config)
+  │  *name holder-editable per tenure? → F1, decide
+  │
+  ├─&lt; PAIRING (the spine)
+  │     stone_id, person_ref, started_at, ended_at
+  │     consent_flags (team-share, pe-journal-opt-out)
+  │     claim: none | pending(token, expiry) | claimed(account_id)
+  │     ordinal (1st, 2nd… holder — powers anonymous attribution)
+  │
+  ├─&lt; GIFT (one per pairing, the chain)
+  │     pairing_id, text, media[], created_at
+  │
+  ├─&lt; COMMONS_POST
+  │     pairing_id (attribution via ordinal), text, media[]
+  │     scopes: {stone, public} (≥1)
+  │     reply: none | {pairing_id, text, media, created_at}   ← one, ever
+  │
+  ├─&lt; PE_JOURNAL_ENTRY (pairing-scoped, rung 2)
+  │     pairing_id, text, created_at
+  │
+  └─&lt; MY_JOURNAL_ENTRY (F8 module; pairing-scoped)
+        pairing_id, text, media[], created_at
+        shares: {stone?, commons?, team?}          ← additive, per entry
+
+ACCOUNT (Phase 2)
+  email (verified via magic link), created_at
+  ─&lt; PAIRING (claimed)                 ← the collection
+  notification_prefs {new_gift, reply, digest} × {email, push}
+  ─&lt; SEEN_CURSOR per pairing           ← powers the activity dot
+
+OPERATOR SIDE (out of user-facing scope; needed for field test)
+  STONE provisioning, campaign/team grouping, team-shared content review
+</code></pre>
+<p><strong>Modeling notes</strong>
+- <strong>Pairing is the join everything hangs off.</strong> Gifts, posts, journals reference pairing (not account) — so all content works anonymously, and claiming a pairing retroactively connects it to an account without rewriting content. This is the mechanism that makes "accounts optional, added later" true in the data model, not just the UX.
+- A <strong>gift is not a commons post</strong>. Same shape, different chain (resolves F6): The Gifts is the pairing-ordered spine; Commons is the ambient feed. A gift <em>may additionally</em> be cross-published to Commons (the "Mirror Mirror" card on screen 5 suggests this) — if so, it's one content record surfaced in two collections, not two records.
+- <strong>Anonymous person_ref pre-claim:</strong> a device-generated id stored locally + on the pairing. If never claimed, the pairing stays anonymous forever — fine, the chain doesn't care.</p>
+<hr />
+<h2>3. Client-side state (PWA)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Store</th>
+<th>Contents</th>
+<th>Lifecycle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local (IndexedDB)</td>
+<td>conversation transcript; draft gift/post/entry; device person_ref; active stone_id</td>
+<td>transcript cleared N days after pairing end (grace period for "wait, I wanted to save that" — recommend 7); drafts cleared on publish</td>
+</tr>
+<tr>
+<td>Session/auth</td>
+<td>long-lived session token post-claim</td>
+<td>survives PWA restarts; Doc 6 covers iOS eviction</td>
+</tr>
+<tr>
+<td>Server-synced</td>
+<td>everything rung 2+</td>
+<td>on-demand fetch; offline shell caches last-viewed (Doc 6)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conversation persistence question the prototype leaves open:</strong> transcripts survive app restarts within a tenure (Flow B requires it) → IndexedDB, not memory. iOS <em>can evict</em> IndexedDB for storage pressure after long disuse — acceptable for MVP (conversation loss = graceful Emissary "we've talked before, though I hold it loosely"), but state it in the field-test guide. <strong>[accepted risk, document]</strong></p>
+<hr />
+<h2>4. State machines</h2>
+<h3>Pairing</h3>
+<pre><code>(stone idle) ──scan/first-open──▶ ACTIVE
+ACTIVE ──gift published──▶ ENDING (claim offer shown)
+ENDING ──email entered──▶ ENDED+CLAIM_PENDING ──link clicked──▶ ENDED+CLAIMED
+ENDING ──skipped──▶ ENDED
+ENDED+CLAIM_PENDING ──7 days──▶ ENDED (token expires; content persists, unclaimable*)
+</code></pre>
+<p>* Recommend: expired claims recoverable by support during field test (email match).</p>
+<h3>Stone</h3>
+<pre><code>IDLE (no active pairing) ──first scan──▶ HELD ──gift──▶ IDLE …repeat
+</code></pre>
+<p>Current-holder binding: on IDLE→HELD, bind to the scanning device's person_ref; subsequent devices see bystander view (IA §1). Handoff race (two scans post-gift): first write wins, second gets bystander view. <strong>[verify acceptable for field test]</strong></p>
+<h3>Reply slot</h3>
+<pre><code>OPEN ──reply posted──▶ CLOSED (terminal)
+</code></pre>
+<h3>Commons post scope matrix (resolves Flow C gap)</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>stone</th>
+<th>public</th>
+<th>Appears in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✓</td>
+<td>✗</td>
+<td>Stone feed of that stone only</td>
+</tr>
+<tr>
+<td>✗</td>
+<td>✓</td>
+<td>Public feed only</td>
+</tr>
+<tr>
+<td>✓</td>
+<td>✓</td>
+<td>Both (one record)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. What claiming actually transfers</h2>
+<p>At claim, <strong>nothing moves and nothing changes rung.</strong> The pairing gains an <code>account_id</code>. The account thereby gains <em>access</em> to: that pairing's gift, commons posts, My Journal entries, PE Journal entries — all already server-side at rungs 2–5. The transcript (rung 1) is <strong>not</strong> part of the archive: it stayed on the device and dies with the grace period. The claim copy must not imply otherwise.</p>
+<blockquote>
+<p>Optional post-MVP: "export my conversation" as a local download offered during the grace period. Not in scope now; noted because users may ask.</p>
+</blockquote>
+<hr />
+<h2>6. Retention &amp; deletion</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Retention</th>
+<th>Deletion path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transcript</td>
+<td>device only, cleared post-grace</td>
+<td>automatic</td>
+</tr>
+<tr>
+<td>Rung 2 content</td>
+<td>life of product</td>
+<td>account deletion removes claimed pairings' rung-2 content</td>
+</tr>
+<tr>
+<td>Rung 4–5 content</td>
+<td>life of stone/product — it's the communal artifact</td>
+<td>takedown-by-request only (field test: via project team); full self-serve deletion would tear holes in the chain — <strong>product call, defaulting to takedown-request in MVP</strong></td>
+</tr>
+<tr>
+<td>Account</td>
+<td>until deleted</td>
+<td>delete = unlink pairings (they revert to anonymous), erase email + prefs</td>
+</tr>
+<tr>
+<td>Claim tokens</td>
+<td>7 days</td>
+<td>automatic</td>
+</tr>
+</tbody>
+</table></div>
+<p>GDPR-shaped note for the field test: rungs 4–5 are effectively contributions to a collective work; the consent/fineprint (M3 screens) must say so plainly <em>before</em> first contribution. This is why M3 is not cosmetic backlog.</p>
+</main>
+
+<div class="pager">
+<a href="03-core-user-flows.html">&larr; 03 · Flows</a><span class="spacer"></span><a href="05-notifications-reengagement.html">05 · Notifications &rarr;</a>
+</div>
+
+</body>
+</html>

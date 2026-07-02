@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="nav_x5F_base" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 324.4 52.6">
+  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #231f20;
+        opacity: .8;
+        stroke: #989898;
+        stroke-miterlimit: 10;
+        stroke-width: .8px;
+      }
+    </style>
+  </defs>
+  <g id="nav_base">
+    <rect class="st0" x=".4" y=".4" width="323.7" height="51.8" rx="25.9" ry="25.9"/>
+  </g>
+</svg>

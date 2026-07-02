@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stonemaps · Field-Test MVP Documentation</title>
+<style>
+  :root{
+    --red:#A31621; --red-dark:#7C0F18; --red-wash:#F9E9EA; --red-wash-deep:#F4DCDE;
+    --ink:#2B2222; --muted:#8A7A77; --ground:#F1EDEA;
+    --card:#FFFFFF; --rule:#EAE2DE;
+    --cream:#FAF3E3; --cream-edge:#EFE3C8; --cream-ink:#6B5A2E;
+    --ok:#2E7D46; --ok-wash:#E4F0E8;
+    --warn:#9A6A0B; --warn-wash:#F7EED8;
+    --sans:"Avenir Next","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    --cond:"Avenir Next Condensed","Arial Narrow","Segoe UI",Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px;}
+
+  /* ── Hero ── */
+  .hero{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:52px 24px 46px;position:relative;overflow:hidden;
+  }
+  .hero-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:44px;}
+  .hero .stone{
+    flex:0 0 190px;width:190px;height:190px;border-radius:50%;overflow:hidden;
+    border:6px solid rgba(255,255,255,.25);background:#fff2;
+  }
+  .hero .stone img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero .eyebrow{
+    font-size:12px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;
+    opacity:.8;margin-bottom:10px;
+  }
+  .hero h1{
+    font-family:var(--cond);font-weight:700;font-size:clamp(30px,4.4vw,52px);
+    letter-spacing:.04em;text-transform:uppercase;line-height:1.05;text-wrap:balance;
+  }
+  .hero p.lede{
+    margin-top:14px;font-size:15.5px;line-height:1.6;max-width:62ch;opacity:.92;
+  }
+  .hero p.lede em{font-family:var(--serif);}
+  .hero svg.path{position:absolute;inset:auto 0 0 0;width:100%;height:26px;opacity:.3}
+
+  /* ── Section scaffolding ── */
+  section{padding:38px 0 8px;}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;}
+  .sec-head h2{
+    font-family:var(--cond);font-weight:700;font-size:22px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--red);
+  }
+  .sec-head .note{font-size:12.5px;color:var(--muted);}
+
+  /* ── Key asset feature ── */
+  .feature{
+    display:flex;gap:0;background:var(--card);border:2px solid var(--red);
+    border-radius:0;overflow:hidden;box-shadow:0 3px 14px rgba(43,34,34,.12);
+  }
+  .feature .left{
+    flex:0 0 38%;background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:34px 32px;display:flex;flex-direction:column;justify-content:center;
+  }
+  .feature .left .k{font-size:11px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;opacity:.8;margin-bottom:8px;}
+  .feature .left h3{font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.04em;text-transform:uppercase;line-height:1.1;}
+  .feature .left p{font-size:13.5px;line-height:1.55;margin-top:12px;opacity:.92;}
+  .feature .left .cta{
+    margin-top:20px;align-self:flex-start;background:#fff;color:var(--red-dark);
+    font-family:var(--cond);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;
+    padding:11px 22px;border-radius:0;text-decoration:none;
+  }
+  .feature .left .cta:hover{background:var(--red-wash);}
+  .feature .left .cta:focus-visible{outline:3px solid #fff;outline-offset:2px;}
+  .feature .right{flex:1;padding:30px 34px;display:flex;flex-direction:column;gap:10px;}
+  .feature .right .row{display:flex;gap:10px;align-items:baseline;border-top:1px solid var(--rule);padding:9px 0 0;}
+  .feature .right .row:first-child{border-top:none;padding-top:0;}
+  .feature .right .n{
+    font-family:var(--cond);font-weight:700;font-size:15px;color:var(--red);width:20px;flex:0 0 20px;
+  }
+  .feature .right .nm{font-weight:650;font-size:14px;flex:0 0 110px;}
+  .feature .right .d{font-size:12.5px;color:var(--muted);line-height:1.45;}
+
+  /* ── Cards grid ── */
+  .grid{display:grid;gap:16px;}
+  .grid.orig{grid-template-columns:1.2fr 1fr;}
+  .grid.lib{grid-template-columns:repeat(3,1fr);}
+  .card{
+    background:var(--card);border:1px solid var(--rule);border-radius:0;
+    padding:22px 24px;box-shadow:0 2px 8px rgba(43,34,34,.07);
+  }
+  .card h3{
+    font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--red);margin-bottom:6px;
+  }
+  .card p{font-size:13px;line-height:1.55;color:var(--muted);}
+  .card .tag{
+    display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--red-wash);color:var(--red-dark);border-radius:0;padding:2px 7px;margin-bottom:9px;
+  }
+  .card .tag.orig-tag{background:var(--cream);color:var(--cream-ink);}
+
+  /* click-through screen list */
+  .screens{display:grid;grid-template-columns:repeat(2,1fr);gap:4px 18px;margin-top:14px;}
+  .screens a{
+    font-size:12.5px;color:var(--ink);text-decoration:none;padding:5px 2px;
+    border-bottom:1px dashed var(--rule);display:flex;gap:8px;align-items:baseline;
+  }
+  .screens a:hover{color:var(--red);}
+  .screens .no{font-family:var(--mono);font-size:10px;color:var(--muted);flex:0 0 22px;}
+  .btnrow{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{
+    display:inline-block;font-family:var(--cond);font-weight:700;font-size:13px;
+    letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+    padding:10px 20px;border-radius:0;
+  }
+  .btn.primary{background:var(--red);color:#fff;}
+  .btn.primary:hover{background:var(--red-dark);}
+  .btn.ghost{border:1px solid var(--red);color:var(--red);}
+  .btn.ghost:hover{background:var(--red-wash);}
+  .btn:focus-visible{outline:3px solid var(--red);outline-offset:2px;}
+
+  .diagram-thumb{
+    display:block;border:1px solid var(--rule);border-radius:0;overflow:hidden;margin-top:14px;
+  }
+  .diagram-thumb img{width:100%;display:block;}
+
+  /* library cards: doc list */
+  .doc-card{display:flex;flex-direction:column;}
+  .doc-card .aud{margin-top:auto;padding-top:12px;font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);font-weight:600;}
+  a.card-link{text-decoration:none;color:inherit;display:block;transition:border-color .15s;}
+  a.card-link:hover .card, a.card-link:focus-visible .card{border-color:var(--red);}
+  a.card-link:focus-visible{outline:none;}
+
+  /* open calls */
+  .calls{background:var(--cream);border:1px solid var(--cream-edge);border-radius:0;padding:20px 24px;}
+  .calls h3{
+    font-family:var(--cond);font-weight:700;font-size:15px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--cream-ink);margin-bottom:10px;
+  }
+  .calls h3::before{content:"⚠ ";}
+  .calls ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:6px 26px;}
+  .calls li{font-size:12.5px;line-height:1.5;color:#5d4f2a;padding-left:14px;position:relative;}
+  .calls li::before{content:"●";position:absolute;left:0;font-size:8px;top:.45em;color:var(--cream-ink);}
+  .calls li b{color:var(--ink);}
+
+  footer{
+    margin-top:44px;padding:22px 24px 34px;text-align:center;
+    font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  }
+
+  @media (max-width:900px){
+    .hero-inner{flex-direction:column;text-align:center;gap:24px;}
+    .hero p.lede{margin-left:auto;margin-right:auto;}
+    .feature{flex-direction:column;}
+    .grid.orig,.grid.lib{grid-template-columns:1fr;}
+    .calls ul{grid-template-columns:1fr;}
+    .feature .right .nm{flex-basis:auto;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* ── Global top nav ── */
+  .topnav{
+    background:linear-gradient(175deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;padding:14px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:10;
+  }
+  .topnav .brand{
+    font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.12em;
+    text-transform:uppercase;color:#fff;text-decoration:none;margin-right:auto;
+  }
+  .topnav a{color:#fff;text-decoration:none;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;opacity:.85;}
+  .topnav a:hover,.topnav a:focus-visible{opacity:1;text-decoration:underline;}
+  .topnav a:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  /* ── Get the full set ── */
+  .getset{
+    display:flex;gap:16px;flex-wrap:wrap;background:var(--card);border:1px solid var(--rule);
+    padding:22px 26px;align-items:center;box-shadow:0 2px 8px rgba(43,34,34,.07);
+  }
+  .getset p{font-size:13px;color:var(--muted);line-height:1.5;flex:1 1 320px;}
+  .getset .actions{display:flex;gap:10px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="index.html">Stonemaps · Field-Test Docs</a>
+  <a href="index.html">Home</a>
+  <a href="docs/08-holder-journey-map.html">Journey Map</a>
+  <a href="1-landing.html">Click-through</a>
+  <a href="PE-FT-workflow-V5.jpg">Workflow V5</a>
+  <a href="downloads/stonemaps-mvp-docs.zip">Download Docs ⭳</a>
+  <a href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">GitHub ↗</a>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="stone"><img src="assets/sri-lanka.png" alt="Koozhankal — a river stone imprinted with a map of Sri Lanka"></div>
+    <div>
+      <div class="eyebrow">Field Test · 2026</div>
+      <h1>Stonemaps<br>MVP Documentation</h1>
+      <p class="lede">A common stone, transformed into a personal companion with a voice — passed hand to hand, accumulating memory and provenance. This site holds the complete IA/UXD documentation for the field-test MVP and its account layer: <em>the original prototype, the workflow it was built from, eight working documents, and the holder journey map that ties them together.</em></p>
+    </div>
+  </div>
+  <svg class="path" viewBox="0 0 1200 26" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,20 C150,6 280,24 420,14 S700,4 860,16 S1100,22 1200,10"
+          fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="2 7" stroke-linecap="round"/>
+  </svg>
+</header>
+
+<div class="wrap">
+
+  <!-- ── Key asset ── -->
+  <section>
+    <div class="sec-head"><h2>The Key Asset</h2><span class="note">start here — everything else feeds it</span></div>
+    <div class="feature">
+      <div class="left">
+        <div class="k">Doc 08</div>
+        <h3>Holder Journey Map</h3>
+        <p>Six stages from first QR scan to lifelong follower. Every stage carries what the holder does, thinks, and touches; what it leaves behind; what we want to learn; what it takes to build; and where it stands today.</p>
+        <a class="cta" href="docs/08-holder-journey-map.html">Open the map</a>
+      </div>
+      <div class="right">
+        <div class="row"><span class="n">1</span><span class="nm">Encounter</span><span class="d">a stranger scans the QR and meets something that claims to talk</span></div>
+        <div class="row"><span class="n">2</span><span class="nm">Threshold</span><span class="d">the previous holder's gift, and plain-language consent</span></div>
+        <div class="row"><span class="n">3</span><span class="nm">Converse</span><span class="d">private exchange with the Emissary — device-only by promise</span></div>
+        <div class="row"><span class="n">4</span><span class="nm">Participate</span><span class="d">the Commons, the reply slot, the journals</span></div>
+        <div class="row"><span class="n">5</span><span class="nm">Gift</span><span class="d">the handoff — and the one ask: "want to see where it goes?"</span></div>
+        <div class="row"><span class="n">6</span><span class="nm">Follow</span><span class="d">the afterlife: My Stones, new gifts, a quiet line of sight</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Original materials ── -->
+  <section>
+    <div class="sec-head"><h2>The Original Materials</h2><span class="note">what the documentation was built from</span></div>
+    <div class="grid orig">
+      <div class="card">
+        <span class="tag orig-tag">Prototype · 10 screens</span>
+        <h3>The Click-Through</h3>
+        <p>The working HTML prototype of the field-test MVP — from the landing page a QR scan resolves to, through conversation, commons, and journals, to gifting the stone onward. Fully linked; walk it as a holder would.</p>
+        <div class="btnrow">
+          <a class="btn primary" href="1-landing.html">Start the click-through</a>
+        </div>
+        <div class="screens">
+          <a href="1-landing.html"><span class="no">1</span>Landing — "what is this?"</a>
+          <a href="2-welcome-image.html"><span class="no">2</span>Welcome — the gift</a>
+          <a href="3-planetary-emissary.html"><span class="no">3</span>PE Intro — consent</a>
+          <a href="4-pe-conversation.html"><span class="no">4</span>PE Conversation</a>
+          <a href="5-the-commons.html"><span class="no">5</span>The Commons</a>
+          <a href="5b-contribute.html"><span class="no">5b</span>Contribute</a>
+          <a href="6-pe-journal.html"><span class="no">6</span>PE Journal</a>
+          <a href="6b-journal-entry.html"><span class="no">6b</span>My Journal — New Entry</a>
+          <a href="6c-my-journal.html"><span class="no">6c</span>My Journal</a>
+          <a href="7-gift-the-stone.html"><span class="no">7</span>Gift the Stone</a>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag orig-tag">Workflow diagram · V5</span>
+        <h3>PE Field-Test Workflow</h3>
+        <p>The original wireframe workflow the prototype implements — screen boxes, routing, and the notes that define the Commons reply slot and the Gifts chain. The documentation set records where the prototype has since moved past it (My Journal is a post-V5 addition).</p>
+        <a class="diagram-thumb" href="PE-FT-workflow-V5.jpg" title="Open full-size workflow diagram">
+          <img src="PE-FT-workflow-V5.jpg" alt="PE field test workflow diagram V5 — wireframe screens connected by routing arrows" loading="lazy">
+        </a>
+        <div class="btnrow">
+          <a class="btn ghost" href="PE-FT-workflow-V5.jpg">View full size</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Documentation library ── -->
+  <section>
+    <div class="sec-head"><h2>The Documentation Set</h2><span class="note">eight working documents · rendered for reading</span></div>
+    <div class="grid lib">
+      <a class="card-link" href="docs/index.html">
+        <div class="card doc-card">
+          <span class="tag">Index</span>
+          <h3>Library</h3>
+          <p>How to use the set, cross-reference id system (F/M/A/D/P/R/T), phase status, and the open product calls.</p>
+          <div class="aud">everyone</div>
+        </div>
+      </a>
+      <a class="card-link" href="docs/00-concept-glossary.html">
+        <div class="card doc-card">
+          <span class="tag">Doc 00</span>
+          <h3>Concept Glossary</h3>
+          <p>Canonical vocabulary — Stone, Emissary, Holder, Pairing, Gift, Claim, the privacy rungs. Change terms here first.</p>
+          <div class="aud">everyone</div>
+        </div>
+      </a>
+      <a class="card-link" href="docs/01-screen-inventory.html">
+        <div class="card doc-card">
+          <span class="tag">Doc 01</span>
+          <h3>Screen &amp; Component Inventory</h3>
+          <p>What the prototype actually contains: screens, nav states, components, both design-token sets, flags F1–F8.</p>
+          <div class="aud">ui design · dev</div>
+        </div>
+      </a>
+      <a class="card-link" href="docs/02-site-map-ia.html">
+        <div class="card doc-card">
+          <span class="tag">Doc 02</span>
+          <h3>Site Map &amp; IA</h3>
+          <p>Two contexts (Stone / Collection), full site map with missing and new account screens, gating matrix, URL routes.</p>
+          <div class="aud">ui design · dev</div>
+        </div>
+      </a>
+      <a class="card-link" href="docs/03-core-user-flows.html">
+        <div class="card doc-card">
+          <span class="tag">Doc 03</span>
+          <h3>Core User Flows</h3>
+          <p>Flows A–G: first touch, return, commons, gift + claim, magic-link verify, afterlife, notifications. Build order.</p>
+          <div class="aud">ui design · dev</div>
+        </div>
+      </a>
+      <a class="card-link" href="docs/04-data-state-requirements.html">
+        <div class="card doc-card">
+          <span class="tag">Doc 04</span>
+          <h3>Data &amp; State Requirements</h3>
+          <p>The privacy ladder, the pairing-centric entity model, client-side state, state machines, what claiming transfers.</p>
+          <div class="aud">dev · product</div>
+        </div>
+      </a>
+      <a class="card-link" href="docs/05-notifications-reengagement.html">
+        <div class="card doc-card">
+          <span class="tag">Doc 05</span>
+          <h3>Notifications &amp; Re-engagement</h3>
+          <p>Trigger matrix T1–T6, anti-triggers, email-first channel strategy, opt-in surface, field-test success metrics.</p>
+          <div class="aud">dev · product</div>
+        </div>
+      </a>
+      <a class="card-link" href="docs/06-pwa-constraints.html">
+        <div class="card doc-card">
+          <span class="tag">Doc 06</span>
+          <h3>PWA Constraints</h3>
+          <p>Platform realities: magic-link × PWA session split, iOS storage eviction, offline scope, QR binding. Decisions P1–P7.</p>
+          <div class="aud">dev</div>
+        </div>
+      </a>
+      <a class="card-link" href="docs/07-backend-brief.html">
+        <div class="card doc-card">
+          <span class="tag">Doc 07</span>
+          <h3>Backend Brief</h3>
+          <p>The requirements checklist any backend must meet; build-vs-reuse evaluation of the existing stone-maps backend.</p>
+          <div class="aud">dev · product</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Get the full set ── -->
+  <section>
+    <div class="sec-head"><h2>Get the Full Set</h2><span class="note">for offline reading, archiving, or forking</span></div>
+    <div class="getset">
+      <p>Every markdown source doc (00–07), the holder journey map, and the original PE field-test workflow image — bundled as one clean download. Or clone the whole documentation set, source included, from its public repository.</p>
+      <div class="actions">
+        <a class="btn primary" href="downloads/stonemaps-mvp-docs.zip">Download .zip</a>
+        <a class="btn ghost" href="https://github.com/worksona/stonemaps-mvp-docs" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Open calls ── -->
+  <section>
+    <div class="sec-head"><h2>Open Product Calls</h2><span class="note">what's blocking, per the library index</span></div>
+    <div class="calls">
+      <h3>Decisions pending</h3>
+      <ul>
+        <li><b>F8</b> — My Journal in MVP or eval-only? Blocks final flows, claim-offer copy, backend scope.</li>
+        <li><b>Backend A/B</b> — extend the existing stone-maps backend or build fresh; pending schema inspection (Doc 07).</li>
+        <li><b>F1</b> — Koozhankal vs Pierrot: stone name vs Emissary name; holder-renameable?</li>
+        <li><b>F3</b> — two design languages (landing vs app): formalize or unify the token sets.</li>
+        <li><b>D6</b> — past holders read-only in the afterlife (recommended) — confirm.</li>
+        <li>Virtual-stone handoff mechanics, bystander view, and rung 4–5 deletion policy.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Stonemaps · Field Test 2026 · documentation drafted 2026-07-02 · docs 00–08 · flows A–G
+</footer>
+
+</body>
+</html>
