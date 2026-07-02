@@ -52,6 +52,23 @@
   }
   .sec.flowctx b.nm{color:var(--ink);font-weight:600;}
 
+  /* wireframe screen outlines (from PE field-test workflow V5) */
+  .wires{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;}
+  .wire{flex:0 0 auto;text-align:center;}
+  .wire svg{
+    width:58px;height:auto;display:block;margin:0 auto;
+    color:#8A7A77;stroke:currentColor;fill:none;stroke-width:1.2;
+  }
+  .wire svg .blk{fill:currentColor;stroke:none;opacity:.22;}
+  .wire svg .cta{fill:var(--red);stroke:none;opacity:.8;}
+  .wire svg .dash{stroke-dasharray:3 2.5;}
+  .wire .cap{
+    font-family:var(--mono);font-size:8.5px;color:var(--muted);
+    margin-top:4px;letter-spacing:.02em;white-space:nowrap;
+  }
+  .wire.new svg{color:#B08A45;}
+  .wire.new .cap{color:#9A6A0B;}
+
   /* ── Stages grid — full-bleed, fluid, no side-scroll ── */
   .stages{
     display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
@@ -363,6 +380,22 @@
     <div class="sec flowctx">
       <div class="lbl">Flow context</div>
       <div class="fl"><b class="id">A</b><b class="nm">First touch</b> — begins here: QR scan → Landing. Anonymous, under a minute end to end; the nav stays locked until the first exchange.</div>
+      <div class="wires">
+        <div class="wire">
+          <svg viewBox="0 0 60 104" aria-label="Landing screen outline">
+            <rect x="1" y="1" width="58" height="102"/>
+            <rect class="blk" x="14" y="8" width="32" height="24"/>
+            <line x1="16" y1="40" x2="44" y2="40"/>
+            <line x1="16" y1="46" x2="44" y2="46"/>
+            <line x1="21" y1="56" x2="39" y2="56"/>
+            <line x1="14" y1="64" x2="46" y2="64"/>
+            <line x1="14" y1="70" x2="46" y2="70"/>
+            <line x1="18" y1="76" x2="42" y2="76"/>
+            <rect class="cta" x="15" y="88" width="30" height="8"/>
+          </svg>
+          <div class="cap">1 · landing</div>
+        </div>
+      </div>
     </div>
     <div class="stat">
       <span class="schip ok">UI built</span>
@@ -448,6 +481,35 @@
     <div class="sec flowctx">
       <div class="lbl">Flow context</div>
       <div class="fl"><b class="id">A</b><b class="nm">First touch</b> — continues: Welcome → PE Intro form the once-per-pairing gate. Returning holders skip this entirely.</div>
+      <div class="wires">
+        <div class="wire">
+          <svg viewBox="0 0 60 104" aria-label="Welcome screen outline">
+            <rect x="1" y="1" width="58" height="102"/>
+            <line x1="16" y1="9" x2="44" y2="9"/>
+            <rect x="10" y="15" width="40" height="34"/>
+            <line x1="12" y1="56" x2="48" y2="56"/>
+            <line x1="12" y1="62" x2="48" y2="62"/>
+            <line x1="16" y1="68" x2="44" y2="68"/>
+            <rect class="cta" x="14" y="88" width="32" height="8"/>
+          </svg>
+          <div class="cap">2 · welcome</div>
+        </div>
+        <div class="wire">
+          <svg viewBox="0 0 60 104" aria-label="PE Intro screen outline">
+            <rect x="1" y="1" width="58" height="102"/>
+            <line x1="10" y1="12" x2="50" y2="12"/>
+            <line x1="10" y1="18" x2="50" y2="18"/>
+            <line x1="10" y1="24" x2="42" y2="24"/>
+            <rect x="10" y="40" width="6" height="6"/>
+            <line x1="20" y1="43" x2="50" y2="43"/>
+            <rect x="10" y="52" width="6" height="6"/>
+            <line x1="20" y1="55" x2="50" y2="55"/>
+            <line x1="20" y1="72" x2="40" y2="72"/>
+            <rect class="cta" x="17" y="88" width="26" height="8"/>
+          </svg>
+          <div class="cap">3 · pe intro</div>
+        </div>
+      </div>
     </div>
     <div class="stat">
       <span class="schip ok">UI built</span>
@@ -534,6 +596,33 @@
       <div class="lbl">Flow context</div>
       <div class="fl"><b class="id">A</b><b class="nm">First touch</b> — ends here, at the first exchange with the Emissary; the nav unlocks.</div>
       <div class="fl"><b class="id">B</b><b class="nm">Return, holding</b> — reopen mid-tenure: straight to the chat, history intact, no gate.</div>
+      <div class="wires">
+        <div class="wire">
+          <svg viewBox="0 0 60 104" aria-label="PE Conversation screen outline">
+            <rect x="1" y="1" width="58" height="102"/>
+            <line x1="8" y1="9" x2="30" y2="9"/>
+            <line x1="8" y1="14" x2="24" y2="14"/>
+            <rect class="blk" x="8" y="21" width="32" height="18"/>
+            <rect x="8" y="72" width="22" height="7"/>
+            <rect x="8" y="82" width="22" height="7"/>
+            <rect x="8" y="93" width="44" height="6"/>
+          </svg>
+          <div class="cap">4 · conversation</div>
+        </div>
+        <div class="wire">
+          <svg viewBox="0 0 60 104" aria-label="PE Journal screen outline">
+            <rect x="1" y="1" width="58" height="102"/>
+            <line x1="10" y1="9" x2="40" y2="9"/>
+            <rect x="10" y="17" width="40" height="10"/>
+            <rect x="10" y="31" width="40" height="10"/>
+            <rect x="10" y="45" width="40" height="10"/>
+            <rect x="10" y="59" width="40" height="10"/>
+            <rect x="10" y="88" width="6" height="6"/>
+            <line x1="20" y1="91" x2="48" y2="91"/>
+          </svg>
+          <div class="cap">6 · pe journal</div>
+        </div>
+      </div>
     </div>
     <div class="stat">
       <span class="schip ok">UI built</span>
@@ -622,6 +711,35 @@
     <div class="sec flowctx">
       <div class="lbl">Flow context</div>
       <div class="fl"><b class="id">C</b><b class="nm">Commons</b> — read Stone ⇄ Public feeds, contribute, spend a one-time reply slot. My Journal rides alongside as the F8 module.</div>
+      <div class="wires">
+        <div class="wire">
+          <svg viewBox="0 0 60 104" aria-label="The Commons screen outline">
+            <rect x="1" y="1" width="58" height="102"/>
+            <rect x="22" y="6" width="16" height="6"/>
+            <circle cx="26" cy="9" r="2"/>
+            <rect class="blk" x="10" y="18" width="40" height="13"/>
+            <rect class="blk" x="10" y="35" width="40" height="13"/>
+            <rect class="blk" x="10" y="52" width="40" height="13"/>
+            <rect class="dash" x="10" y="69" width="40" height="8"/>
+            <rect class="cta" x="16" y="88" width="28" height="8"/>
+          </svg>
+          <div class="cap">5 · commons</div>
+        </div>
+        <div class="wire">
+          <svg viewBox="0 0 60 104" aria-label="Contribute screen outline">
+            <rect x="1" y="1" width="58" height="102"/>
+            <line x1="48" y1="6" x2="53" y2="11"/>
+            <line x1="53" y1="6" x2="48" y2="11"/>
+            <rect x="8" y="14" width="44" height="30"/>
+            <rect x="8" y="54" width="6" height="6"/>
+            <line x1="18" y1="57" x2="48" y2="57"/>
+            <rect x="8" y="66" width="6" height="6"/>
+            <line x1="18" y1="69" x2="48" y2="69"/>
+            <rect class="cta" x="16" y="88" width="28" height="8"/>
+          </svg>
+          <div class="cap">5b · contribute</div>
+        </div>
+      </div>
     </div>
     <div class="stat">
       <span class="schip ok">UI built</span>
@@ -711,6 +829,31 @@
     <div class="sec flowctx">
       <div class="lbl">Flow context</div>
       <div class="fl"><b class="id">D</b><b class="nm">Gift</b> — parting gift joins the chain → &ldquo;keep following?&rdquo; ask → stone resets. The claim offer lives inside this flow, pre-reset (D2).</div>
+      <div class="wires">
+        <div class="wire">
+          <svg viewBox="0 0 60 104" aria-label="Gift the Stone screen outline">
+            <rect x="1" y="1" width="58" height="102"/>
+            <line x1="10" y1="9" x2="38" y2="9"/>
+            <line x1="48" y1="6" x2="53" y2="11"/>
+            <line x1="53" y1="6" x2="48" y2="11"/>
+            <rect x="8" y="16" width="44" height="34"/>
+            <line x1="8" y1="57" x2="26" y2="57"/>
+            <rect class="cta" x="16" y="88" width="28" height="8"/>
+          </svg>
+          <div class="cap">7 · gift</div>
+        </div>
+        <div class="wire new">
+          <svg viewBox="0 0 60 104" aria-label="Keep Following screen outline — to design">
+            <rect class="dash" x="1" y="1" width="58" height="102"/>
+            <line x1="10" y1="14" x2="50" y2="14"/>
+            <line x1="10" y1="20" x2="42" y2="20"/>
+            <rect x="8" y="34" width="44" height="9"/>
+            <rect class="cta" x="8" y="52" width="30" height="8"/>
+            <rect x="8" y="66" width="24" height="7"/>
+          </svg>
+          <div class="cap">A1 · to design</div>
+        </div>
+      </div>
     </div>
     <div class="stat">
       <span class="schip ok">gift UI built</span>
@@ -804,6 +947,39 @@
       <div class="fl"><b class="id">E</b><b class="nm">Claim</b> — magic link verifies email; the pairing attaches to an account.</div>
       <div class="fl"><b class="id">F</b><b class="nm">Afterlife</b> — My Stones → new gifts, stone commons (read-only), own archive.</div>
       <div class="fl"><b class="id">G</b><b class="nm">Notifications</b> — event-driven email only; opt-in, capped, deep-linked.</div>
+      <div class="wires">
+        <div class="wire new">
+          <svg viewBox="0 0 60 104" aria-label="My Stones screen outline — to design">
+            <rect class="dash" x="1" y="1" width="58" height="102"/>
+            <line x1="10" y1="9" x2="34" y2="9"/>
+            <rect x="10" y="16" width="40" height="20"/>
+            <circle cx="19" cy="26" r="5"/>
+            <line x1="28" y1="23" x2="46" y2="23"/>
+            <line x1="28" y1="29" x2="42" y2="29"/>
+            <rect x="10" y="42" width="40" height="20"/>
+            <circle cx="19" cy="52" r="5"/>
+            <line x1="28" y1="49" x2="46" y2="49"/>
+            <line x1="28" y1="55" x2="42" y2="55"/>
+            <circle class="cta" cx="46" cy="20" r="2.5"/>
+          </svg>
+          <div class="cap">A4 · to design</div>
+        </div>
+        <div class="wire new">
+          <svg viewBox="0 0 60 104" aria-label="Afterlife view screen outline — to design">
+            <rect class="dash" x="1" y="1" width="58" height="102"/>
+            <line x1="10" y1="9" x2="40" y2="9"/>
+            <rect x="14" y="16" width="32" height="12"/>
+            <line x1="30" y1="28" x2="30" y2="34"/>
+            <rect x="14" y="34" width="32" height="12"/>
+            <line x1="30" y1="46" x2="30" y2="52"/>
+            <rect x="14" y="52" width="32" height="12"/>
+            <line x1="10" y1="74" x2="50" y2="74"/>
+            <line x1="10" y1="80" x2="44" y2="80"/>
+            <rect x="10" y="88" width="24" height="7"/>
+          </svg>
+          <div class="cap">A5 · to design</div>
+        </div>
+      </div>
     </div>
     <div class="stat">
       <span class="schip warn">all screens · to design</span>
